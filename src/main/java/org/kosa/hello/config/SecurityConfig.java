@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 
@@ -55,9 +56,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		 csrf 토큰 활성화시 사용
 		 쿠키를 생성할 때 HttpOnly 태그를 사용하면 클라이언트 스크립트가 보호된 쿠키에 액세스하는 위험을 줄일 수 있으므로 쿠키의 보안을 강화할 수 있다.
 		*/
-		//http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+		http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
-        http.csrf().disable()	// csrf 토큰을 비활성화
+        http//.csrf().disable()	// csrf 토큰을 비활성화
     	.authorizeRequests() // 요청 URL에 따라 접근 권한을 설정
 		.antMatchers("/", "/login/loginForm", "/js/**","/css/**","/image/**").permitAll() // 해당 경로들은 접근을 허용
 		.anyRequest() // 다른 모든 요청은
@@ -68,6 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.passwordParameter("password")
 		.loginPage("/login/loginForm") // 해당 주소로 로그인 페이지를 호출한다.
 		.loginProcessingUrl("/login") // 해당 URL로 요청이 오면 스프링 시큐리티가 가로채서 로그인처리를 한다. -> loadUserByName
+		.defaultSuccessUrl("/")       // 로그인 성공시 이동할 URL, 성공시 요청을 처리할 핸들러에서 설정하지 않으면 해동 설정값으로 동작함 
 		.successHandler(authSucessHandler) // 성공시 요청을 처리할 핸들러
 		.failureHandler(authFailureHandler) // 실패시 요청을 처리할 핸들러
 	.and()

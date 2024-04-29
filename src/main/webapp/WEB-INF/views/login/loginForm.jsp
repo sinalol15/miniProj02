@@ -50,6 +50,8 @@
 	</c:choose>
 	
     <form id="rForm" action="/login" method="post">
+    	<%-- csrf 토큰 설정 --%>
+    	<sec:csrfInput/>
     	<label>아이디 : </label><input type="text" id="mid" name="mid" required="required" placeholder="아이디를 입력해주세요."/><br/>
         <label>비밀번호 : </label><input type="password" id="mpassword" name="mpassword" required="required" placeholder="비밀번호를 입력해주세요."><br/>
     	<label for="autologin">자동로그인</label><input type="checkbox" id="autologin" name="autologin" value="Y">
@@ -65,7 +67,7 @@
 		alert(msg);
 	}
     
-    const rForm = document.getElementById("rForm");
+    /* const rForm = document.getElementById("rForm");
     //아이디 사용 여부 확인 
     let validUserId = "";
     
@@ -82,7 +84,7 @@
 				alert(json.statusMessage);
 			}
 		});
-    });
+    }); */
     </script>
     
     <sec:authorize access="isAuthenticated()">

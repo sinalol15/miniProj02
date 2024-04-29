@@ -15,6 +15,7 @@ import org.kosa.hello.entity.MboardVO1;
 import org.kosa.hello.entity.MmemberVO1;
 import org.kosa.hello.entity.PageRequestVO;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -62,8 +63,7 @@ public class MboardController1{
 	}
 
 	@GetMapping("/list2")
-	public void list2(Principal principal) {
-		MmemberVO1 memberVO = (MmemberVO1) principal;
+	public void list2(@AuthenticationPrincipal MmemberVO1 memberVO) {
 		log.info("board.list2() 함수 호출 ");
 		log.info("memberVO  = {}", memberVO);
 	}

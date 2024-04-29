@@ -32,7 +32,8 @@ public class AuthSucessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
 		System.out.println("authentication ->" + authentication);
 
-		//성공시 이동할 주소 
+		//성공시 이동할 주소
+		//설정(onfig)에서 defaultSuccessUrl("/") 으로 설정한 것 보다 아래의 코드로 설정한 것이 변경되서 동작함 
         setDefaultTargetUrl("/board/list");
 
         super.onAuthenticationSuccess(request, response, authentication);
