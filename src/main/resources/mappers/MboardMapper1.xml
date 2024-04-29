@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kosa.hello.board.MboardMapper1">
+
+    <sql id="search">
+        <where>
+            <if test="searchKey != null and searchKey != ''">
+                tbtitle like concat('%', #{searchKey}, '%')
+            </if>
+        </where>
+    </sql>
+
+    <select id="getList" resultType="org.kosa.hello.entity.MboardVO1">
+		select 
+			b.*, m.mname tbwriter  
+		from tb_board b inner join tb_member m on b.tmid = m.mid
+		<include refid="search"/>
+		order by tbno desc limit #{skip}, #{size}
+    </select>
+	
+	<select id="getTotalCount" resultType="int">
+		select
+			count(*)
+		from tb_board
+		<include refid="search"/>
+	</select>
+	
+	<select id="read" resultType="org.kosa.hello.entity.MboardVO1">
+		select * from tb_board where tbno = #{tbno}
+	</select>
+	
+	<update id="incViewCount">
+		update tb_board set
+			tbviewcount = tbviewcount + 1
+		where tbno = #{tbno}
+	</update>
+	
+	<delete id="delete">
+		delete from tb_board where tbno = #{tbno}
+	</delete>
+	
+	<update id="update">
+		update TB_BOARD set tbtitle = #{tbtitle}, tbcontent = #{tbcontent} where tbno = #{tbno}
+	</update>
+	
+	<insert id="insert">
+		insert into TB_BOARD (tbno, tbtitle, tbcontent, tmid) values (seq_bno.nextval, #{tbtitle}, #{tbcontent}, #{tmid})
+	</insert>
+</mapper>
