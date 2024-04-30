@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
@@ -10,7 +11,7 @@
 	<title>List</title>
 	<%@ include file="/WEB-INF/views/include/css.jsp" %>
     <%@ include file="/WEB-INF/views/include/js.jsp" %>
-	<style>
+    <style>
 		th, td {
 		  border: 1px solid;
 		}
@@ -30,10 +31,10 @@
 		}
 	</style>
 </head>
-<body>	
+<body>
     <%@ include file="/WEB-INF/views/include/header.jsp" %>
-	<h1>게시물목록</h1>
-	
+	<h1>회원목록</h1>
+	  
     <form id="searchForm" action="list" method="post">
     	<%-- csrf 토큰 설정 --%>
 		<sec:csrfInput/>
@@ -43,33 +44,30 @@
         		<option value="${size.codeid}" ${pageRequestVO.size == size.codeid ? 'selected' : ''} >${size.name}</option>
         	</c:forEach>
         </select>
-    	<label>제목</label>
+    	<label>이름</label>
     	<input type="text" id="searchKey" name="searchKey" value="${param.searchKey}">
     	<input type="submit" value="검색">
     </form>
     
-   	<form id="listForm" action="view" method="post">
-    	<input type="hidden" id="tbno" name="tbno">
-    	<input type="hidden" id="tmid" name="tmid">
+    <form id="listForm" action="view" method="post">
+    	<input type="hidden" id="mid" name="mid">
     	<%-- csrf 토큰 설정 --%>
 		<sec:csrfInput/>
     </form>
     
     <table>
         <tr>
-            <th>게시물번호</th>
-            <th>제목</th>
-            <th>작성일</th>
-            <th>작성자</th>
-            <th>조회수</th>
+            <th>ID</th>
+            <th>이름</th>
+            <th>나이</th>
+            <th>이메일</th>
         </tr>
-        <c:forEach var="board" items="${pageResponseVO.list}">
+        <c:forEach var="member" items="${pageResponseVO.list}">
         <tr>
-            <td onclick="jsView('${board.tbno}', '${principal.mid}')"  style="cursor:pointer;">${board.tbno}</td>
-            <td>${board.tbtitle}</td>
-            <td>${board.tbdate}</td>
-            <td>${board.tmid}</td>
-            <td>${board.viewcount}</td>
+            <td onclick="jsView('${member.mid}')"  style="cursor:pointer;">${member.mid}</td>
+            <td>${member.mname}</td>
+            <td>${member.mage}</td>
+            <td>${member.memail}</td>
         </tr>
         </c:forEach>
     </table>
@@ -97,13 +95,7 @@
 
     </div>
     
-    <form id="insertForm" method="post" action="insertForm">
-    	<%-- csrf 토큰 설정 --%>
-		<sec:csrfInput/>
-		<input type="button" value="등록" onclick="jsInsertForm('${principal.mid}')">
-	</form>
-		
-	<script>	
+	<script>
 	document.querySelector(".pagination").addEventListener("click", function (e) {
 	    e.preventDefault()
 
@@ -125,23 +117,17 @@
 	    searchForm.submit();
 	});
 	
-	function jsView(bn, id1) {
+	function jsView(memberid) {
 		//인자의 값을 설정한다 
-		tbno.value = bn;
-		tmid.value = id1;
+		mid.value = memberid;
 		
 		//양식을 통해서 서버의 URL로 값을 전달한다
 		listForm.submit();
 		
 	}
-	
-	function jsInsertForm(a) {
-		//서버의 URL로 전송한다 
-		insertForm.submit();
-	}
 	</script>
-	
-	<%@ include file="/WEB-INF/views/include/footer.jsp" %>
 
+	<%@ include file="/WEB-INF/views/include/footer.jsp" %>
+	
 </body>
 </html>

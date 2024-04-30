@@ -53,33 +53,6 @@ public class MboardController1{
 		return "board/list";
 	}
 	
-	@GetMapping("/list1")
-	public void list1(Authentication authentication) {
-		MmemberVO1 memberVO = (MmemberVO1) authentication.getPrincipal();
-		log.info("board.list() 함수 호출 ");
-		log.info("memberVO  = {}", memberVO);
-		log.info("member_id = {}", authentication.getName());
-		log.info("authorities = {}", memberVO.getAuthorities());
-	}
-
-	@GetMapping("/list2")
-	public void list2(@AuthenticationPrincipal MmemberVO1 memberVO) {
-		log.info("board.list2() 함수 호출 ");
-		log.info("memberVO  = {}", memberVO);
-	}
-
-	@GetMapping("/list3")
-	public void list3() {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
-		UserDetails userDetails = (UserDetails)principal; 
-		String username = userDetails.getUsername(); 
-		String password = userDetails.getPassword();
-
-		log.info("list3  호출 ");
-		log.info("list3  username = {}", username);
-		log.info("list3  password = {}", password);
-	}
-	
     @RequestMapping("/view")
 	public String view(MboardVO1 board, Model model) throws ServletException, IOException, SQLException {
 		log.info("목록");

@@ -53,6 +53,7 @@ public class MmemberService1 implements UserDetailsService{
 		return null;
 	}
 	
+	@Autowired
 	public static void main(String [] args) {
 		BCryptPasswordEncoder bcryptPasswordEncoder = new BCryptPasswordEncoder();
 		System.out.println(bcryptPasswordEncoder.encode("1004"));

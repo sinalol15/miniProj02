@@ -34,6 +34,7 @@ public class MmemberVO1 implements UserDetails{
 	private String member_roles;
 	private String member_account_expired;
 	private String member_account_locked;
+	private int member_login_count;
 	private LocalDateTime member_last_login_time;
 	
 	//uuid

@@ -22,7 +22,7 @@ public interface MmemberMapper1 {
 	int hobbyFoundInsert(MmemberVO1 memberVO, String mhabbit);
 	MhobbyVO1 hobbiesName(MmemberVO1 memberVO);
 	
-	MmemberVO1 login(MmemberVO1 boardVO);
+	MmemberVO1 login(MmemberVO1 memberVO);
 	int updateMemberLastLogin(String email);
 	
 	void loginCountInc(MmemberVO1 member);

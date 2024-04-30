@@ -2,11 +2,14 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>LoginForm</title>
+    <%@ include file="/WEB-INF/views/include/css.jsp" %>
+    <%@ include file="/WEB-INF/views/include/js.jsp" %>
     <style>
         label {
             display: inline-block;
@@ -25,29 +28,10 @@
 </c:if>
 
 <body>
+    <%@ include file="/WEB-INF/views/include/header.jsp" %>
     <h1>
         로그인 화면
     </h1>
-    
-    <sec:authorize access="isAuthenticated()">
-		<sec:authentication property="principal" var="principal"/>
-	</sec:authorize>
-	
-	<c:choose>
-		<c:when test="${empty principal}">
-			<ul class="navbar-nav">
-				<li class="nav-item"><a class="nav-link" href="/member/loginForm">로그인</a></li>
-				<li class="nav-item"><a class="nav-link" href="/member/joinForm">회원가입</a></li>
-			</ul>
-		</c:when>
-		<c:otherwise>
-			이름 : ${principal.member_name}
-			<ul class="navbar-nav">
-				<li class="nav-item"><a class="nav-link" href="/member/updateForm">회원정보</a></li>
-				<li class="nav-item"><a class="nav-link" href="/member/logout">로그아웃</a></li>
-			</ul>
-		</c:otherwise>
-	</c:choose>
 	
     <form id="rForm" action="/login" method="post">
     	<%-- csrf 토큰 설정 --%>
@@ -87,14 +71,7 @@
     }); */
     </script>
     
-    <sec:authorize access="isAuthenticated()">
-	   로그아웃
-	   회원정보보기
-	</sec:authorize>
-	
-	<sec:authorize access="hasRole('ROLE_ADMIN')">
-	  관리자 페이지
-	</sec:authorize>
+<%@ include file="/WEB-INF/views/include/footer.jsp" %>
 	
 </body>
 </html>
