@@ -4,7 +4,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <!DOCTYPE html>
-<html lang="kr">
+<html>
 <head>
 	<meta charset="UTF-8">
 	<title>InsertForm</title>
@@ -32,10 +32,9 @@
 	<h1>
         회원가입 정보 입력
     </h1>
-    <form id="rForm" action="members1" method="post">
+    <form id="rForm" action="insert" method="post">
     	<%-- csrf 토큰 설정 --%>
 		<sec:csrfInput/>
-       	<input type="hidden" name="action" value="insert">
         <label>아이디 : </label> <input type="text" id="mid" name="mid" required="required"><input type="button" id="duplicateId" value="중복확인"><br/>
         <label>비밀번호 : </label>   <input type="password" id="mpassword" name="mpassword" required="required"><br/>
         <label>비밀번호확인 : </label>   <input type="password" id="mpassword2" name="mpassword2" required="required"><br/>
@@ -60,8 +59,6 @@
     
     <script type="text/javascript">
     
-	menuActive("member_link");
-
     const rForm = document.getElementById("rForm");
     const mid = document.getElementById("mid");
     const mpassword = document.getElementById("mpassword");
@@ -113,20 +110,15 @@
 			action : "existUserId",
 			mid : mid.value
 		}
-		fetch("members1", {
-			method:"POST",
-			body:JSON.stringify(param),
-			headers : {"Content-type" : "application/json; charset=utf-8"}
-		}).then(res => res.json()).then(json => {
-			//서버로 부터 받은 결과를 사용해서 처리 루틴 구현  
-			console.log("json ", json );
-			if (json.existUser == true) {
-				alert("해당 아이디는 사용 중 입니다.");
-				validUserId = "";
-			} else {
-				alert("사용가능한 아이디 입니다.");
-				validUserId = mid.value;
-			}
+		myFetch("existUserId", param, json => {
+		    console.log("json ", json);
+		    if (json.existUser == true) {
+		        alert("해당 아이디는 사용 중 입니다.");
+		        validUserId = "";
+		    } else {
+		        alert("사용가능한 아이디 입니다.");
+		        validUserId = mid.value;
+		    }
 		});
 	});
     </script>

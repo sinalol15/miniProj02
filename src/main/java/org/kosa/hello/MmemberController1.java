@@ -15,9 +15,11 @@ import org.kosa.hello.entity.MhobbyVO1;
 import org.kosa.hello.entity.MmemberVO1;
 import org.kosa.hello.entity.PageRequestVO;
 import org.kosa.hello.member.MmemberService1;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -54,9 +56,9 @@ public class MmemberController1 extends HttpServlet {
   	}
   	
 	@RequestMapping("/view")
-  	public String view(MmemberVO1 member, Model model) throws ServletException, IOException, SQLException {
+  	public String view(Authentication authentication, Model model) throws ServletException, IOException, SQLException {
   		log.info("상세 정보");
-  		model.addAttribute("member", memberService.view(member));
+  		model.addAttribute("member", memberService.view((MmemberVO1) authentication.getPrincipal()));
   		
   		return "member/view";
   	}
@@ -74,7 +76,7 @@ public class MmemberController1 extends HttpServlet {
   			map.put("status", 0);
   		} else {
   			map.put("status", -99);
-  			map.put("statusMessage", "������ ���� �߽��ϴ�.");
+  			map.put("statusMessage", "탈퇴에 실패했습니다.");
   		}
   		return map;
   	}
@@ -126,17 +128,15 @@ public class MmemberController1 extends HttpServlet {
   	
 	@RequestMapping("/insert")
 	@ResponseBody
-  	public Map<String, Object> insert(@RequestBody MmemberVO1 member, Model model, HttpSession session) throws ServletException, IOException {
+  	public Map<String, Object> insert(Authentication authentication, Model model) throws ServletException, IOException {
   		log.info("가입");
   		Map<String, Object> map = new HashMap<String, Object>();
   		
-  		log.info("가입 sessionId = " +session.getId());
-  		MmemberVO1 loginVO = (MmemberVO1)session.getAttribute("loginVO");
-  		if (loginVO.getMid() == null  || loginVO.getMid().length() == 0) {
+  		if (authentication.getPrincipal() == null) {
   			map.put("status", -1);
   			map.put("statusMessage", "id에 null값이 들어갔습니다.");
   		} else {
-  			int updated = memberService.insert(member);
+  			int updated = memberService.insert((MmemberVO1) authentication.getPrincipal());
   			
   			if (updated == 1) {
   				map.put("status", 0);

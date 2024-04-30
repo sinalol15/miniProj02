@@ -60,7 +60,7 @@ public class MboardController1{
 		
 		return "board/view";
 	}
-	
+    
     @RequestMapping("/delete")
     @ResponseBody
 	public Map<String, Object> delete(@RequestBody MboardVO1 board) throws ServletException, IOException {

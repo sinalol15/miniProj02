@@ -10,8 +10,9 @@ import org.kosa.hello.entity.PageRequestVO;
 public interface MboardMapper1 {
 	
 	List<MboardVO1> getList(PageRequestVO pageRequestVO);
-	int  getTotalCount(PageRequestVO pageRequestVO);
+	int getTotalCount(PageRequestVO pageRequestVO);
 	MboardVO1 read(MboardVO1 boardVO);
+	int incViewCount(MboardVO1 boardVO);
 	int delete(MboardVO1 boardVO);
 	int update(MboardVO1 boardVO);
 	int insert(MboardVO1 boardVO);

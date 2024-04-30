@@ -63,7 +63,7 @@
 		update tb_member set muuid=#{muuid} where mid=#{mid}
 	</update>
 	
-	<select id="hobbies">
+	<select id="hobbies" resultType="org.kosa.hello.entity.MhobbyVO1">
 		select * from tb_habbit order by hnumber
 	</select>
 	

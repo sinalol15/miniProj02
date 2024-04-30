@@ -29,7 +29,6 @@
     <form id="rForm" action="insert" method="post">
     	<%-- csrf 토큰 설정 --%>
 		<sec:csrfInput/>
-    	<input type="hidden" name="action" value="">
         <label>제목 : </label><input type="text" id="tbtitle" name="tbtitle" ><br/>
         <label>내용 : </label><input type="text" id="tbcontent" name="tbcontent" ><br/>
 	    <div>

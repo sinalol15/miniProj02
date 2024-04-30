@@ -41,6 +41,7 @@ public class MboardService1 {
 	}
 	
 	public MboardVO1 view(MboardVO1 board) throws ServletException, IOException, SQLException {
+		boardMapper.incViewCount(board);
 		return boardMapper.read(board);
 	}
 	
@@ -58,6 +59,10 @@ public class MboardService1 {
 	
 	public int insert(MboardVO1 board) throws ServletException, IOException {
 		return boardMapper.insert(board);
+	}
+
+	public int incViewCount(MboardVO1 board) throws ServletException, IOException {
+		return boardMapper.incViewCount(board);
 	}
 
 }

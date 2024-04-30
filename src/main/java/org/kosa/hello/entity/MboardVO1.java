@@ -16,7 +16,7 @@ public class MboardVO1 {
 	private String tbdate;
 	private String tmid;
 	private String mname;
-	private int viewcount;
+	private int tbviewcount;
 
 	private String action;
 
@@ -29,13 +29,13 @@ public class MboardVO1 {
 		this.mname = mname;
 	}
 
-	public MboardVO1(int tbno, String tbtitle, String tbcontent, String tbdate, String mname, int viewcount) {
+	public MboardVO1(int tbno, String tbtitle, String tbcontent, String tbdate, String mname, int tbviewcount) {
 		super();
 		this.tbno = tbno;
 		this.tbtitle = tbtitle;
 		this.tbcontent = tbcontent;
 		this.tbdate = tbdate;
 		this.mname = mname;
-		this.viewcount = viewcount;
+		this.tbviewcount = tbviewcount;
 	}
 }

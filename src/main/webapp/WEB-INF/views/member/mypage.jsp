@@ -27,10 +27,10 @@
        나의 페이지
     </h1>
    
-	<label>아이디 : ${member.mid}</label> <br/>
-	<label>이름 : ${member.mname}</label><br/>
-	<label>나이: ${member.mage}</label><br/>
-	<label>이메일: ${member.memail}</label><br/>
+	<label>아이디 : ${principal.mid}</label> <br/>
+	<label>이름 : ${principal.mname}</label><br/>
+	<label>나이: ${principal.mage}</label><br/>
+	<label>이메일: ${principal.memail}</label><br/>
 	<label>취미: ${hobbies.hname}</label>
 	
 	

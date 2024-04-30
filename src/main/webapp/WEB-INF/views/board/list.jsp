@@ -33,11 +33,10 @@
 <body>	
     <%@ include file="/WEB-INF/views/include/header.jsp" %>
 	<h1>게시물목록</h1>
-	
+	<h4>로그인 : ${principal.mname} </h4>
     <form id="searchForm" action="list" method="post">
     	<%-- csrf 토큰 설정 --%>
 		<sec:csrfInput/>
-    	<input type="hidden" id="action" name="action" value="">
     	<select id="size" name="size" >
         	<c:forEach var="size" items="${sizes}">
         		<option value="${size.codeid}" ${pageRequestVO.size == size.codeid ? 'selected' : ''} >${size.name}</option>
@@ -69,7 +68,7 @@
             <td>${board.tbtitle}</td>
             <td>${board.tbdate}</td>
             <td>${board.tmid}</td>
-            <td>${board.viewcount}</td>
+            <td>${board.tbviewcount}</td>
         </tr>
         </c:forEach>
     </table>

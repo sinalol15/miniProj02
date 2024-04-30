@@ -45,7 +45,7 @@
             <th>이메일</th>
         </tr>
         <tr>
-            <td>${principal.mid}</td>
+            <td>${member.mid}</td>
             <td>${principal.mname}</td>
             <td>${principal.mage}</td>
             <td>${principal.memail}</td>
