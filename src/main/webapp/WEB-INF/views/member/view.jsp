@@ -10,25 +10,6 @@
 	<title>View</title>
 	<%@ include file="/WEB-INF/views/include/css.jsp" %>
     <%@ include file="/WEB-INF/views/include/js.jsp" %>
-    <style>
-		th, td {
-		  border: 1px solid;
-		}
-		th {
-			border-color : #96D4D4;
-		}
-		td {
-			border-color : #D6EEEE;
-		}
-		tr:nth-child(even) {
-		  background-color: #D6EEEE;
-		  color:#96D4D4;
-		}
-		tr:nth-child(odd) {
-		  background-color: #96D4D4;
-		  color:white;
-		}
-	</style>
 </head>
 <body>
     <%@ include file="/WEB-INF/views/include/header.jsp" %>
@@ -46,13 +27,12 @@
         </tr>
         <tr>
             <td>${member.mid}</td>
-            <td>${principal.mname}</td>
-            <td>${principal.mage}</td>
-            <td>${principal.memail}</td>
+            <td>${member.mname}</td>
+            <td>${member.mage}</td>
+            <td>${member.memail}</td>
         </tr>
     </table>
 	
-	<script type="text/javascript" src="<c:url value='/resources/js/common.js'/>"></script>
 	<script>
 	menuActive("member_link");
 
@@ -77,25 +57,19 @@
 	}
 	
 	function jsUpdateForm() {
-		action.value = "updateForm";
+		viewForm.action = "updateForm";
 	
 		//서버의 URL로 전송한다 
-		update.submit();
+		viewForm.submit();
 	}
 	</script>
 	
 	<!-- 두개의 폼을 하나로 합치는 방법 , js를 사용하여 처리  -->
 	<form id="viewForm" method="post" action="list">
 		<input type="hidden" id="action" name="action" value="">
-		<input type="hidden" name="mid" value="${principal.mid}">
+		<input type="hidden" name="mid" value="${member.mid}">
 		<input type="button" value="목록" onclick="jsList()">
 		<input type="button" value="삭제" onclick="jsDelete()">
-		<%-- csrf 토큰 설정 --%>
-		<sec:csrfInput/>
-	</form>
-	<form id="update" method="post" action="updateForm">
-		<input type="hidden" id="action" name="action" value="">
-		<input type="hidden" name="mid" value="${principal.mid}">
 		<input type="button" value="수정" onclick="jsUpdateForm()">
 		<%-- csrf 토큰 설정 --%>
 		<sec:csrfInput/>

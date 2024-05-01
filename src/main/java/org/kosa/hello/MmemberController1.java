@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.kosa.hello.entity.MboardVO1;
 import org.kosa.hello.entity.MhobbyVO1;
 import org.kosa.hello.entity.MmemberVO1;
 import org.kosa.hello.entity.PageRequestVO;
@@ -118,7 +119,7 @@ public class MmemberController1 extends HttpServlet {
   	}
   	
 	@RequestMapping("/insertForm")
-  	public String insertForm(Model model) throws ServletException, IOException {
+  	public Object insertForm(Model model) throws ServletException, IOException {
   		log.info("가입 양식");
   		
   		model.addAttribute("hobbies", memberService.hobbies());
@@ -166,7 +167,7 @@ public class MmemberController1 extends HttpServlet {
   	}
 
 	@RequestMapping("/loginForm")
-  	public String loginForm(Model model) {
+  	public Object loginForm(MboardVO1 board, Model model) throws ServletException, IOException{
   		log.info("로그인 양식");
   		
   		return "member/loginForm";

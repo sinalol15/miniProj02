@@ -61,6 +61,25 @@ public class MboardController1{
 		return "board/view";
 	}
     
+	@RequestMapping("jsonBoardInfo")
+	@ResponseBody
+	public Map<String, Object> jsonBoardInfo(@RequestBody MboardVO1 board) throws ServletException, IOException, SQLException {
+		log.info("json 상세보기 -> {}", board);
+		//1. 처리
+		MboardVO1 resultVO = boardService.view(board);
+
+		Map<String, Object> map = new HashMap<>();
+		if (resultVO != null) { //성공
+			map.put("status", 0);
+			map.put("jsonBoard", resultVO);
+		} else {
+			map.put("status", -99);
+			map.put("statusMessage", "게시물 정보 존재하지 않습니다");
+		}
+
+		return map;
+	}
+    
     @RequestMapping("/delete")
     @ResponseBody
 	public Map<String, Object> delete(@RequestBody MboardVO1 board) throws ServletException, IOException {
@@ -105,7 +124,7 @@ public class MboardController1{
 	}
 	
     @RequestMapping("/insertForm")    
-	public String insertForm(Model model) throws ServletException, IOException {
+	public Object insertForm() throws ServletException, IOException {
 		log.info("입력 양식");
 		
 		return "board/insertForm";
@@ -113,7 +132,7 @@ public class MboardController1{
 	
     @RequestMapping("/insert")
     @ResponseBody
-	public Map<String, Object> insert(@RequestBody MboardVO1 board, Model model, HttpSession session) throws ServletException, IOException {
+	public Map<String, Object> insert(@RequestBody MboardVO1 board, HttpSession session) throws ServletException, IOException {
 		log.info("입력");
 		Map<String, Object> map = new HashMap<String, Object>();
 		

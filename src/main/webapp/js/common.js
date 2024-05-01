@@ -50,10 +50,11 @@ const myFetch = (url, formId, handler) => {
 	if (csrfToken) {
 		headers[csrfHeader] = csrfToken 
 	}
+	console.log("headers", headers)
 	fetch(url, {
 			method:"POST",
 			body : param,
-			headers : {"Content-type" : "application/json; charset=utf-8"}
+			headers : headers
 	}).then(res => res.json()).then(json => {
 		//서버로 부터 받은 결과를 사용해서 처리 루틴 구현  
 		console.log("json ", json );
@@ -61,36 +62,8 @@ const myFetch = (url, formId, handler) => {
 	});	
 }
 
-function after() {
-	fetch('afterLogin.html').then(response => response.text()).then(
-		data =>{
-			document.getElementById("after").innerHTML = data;
-		}).catch(error =>{
-			console.log("load failed", error);
-		});
+const menuActive = link_id => {
+   document.querySelector("#" + link_id).classList.add("active");
 }
 
-function before() {
-	fetch('beforeLogin.html').then(response => response.text()).then(
-		data =>{
-			document.getElementById("before").innerHTML = data;
-		}).catch(error =>{
-			console.log("load failed", error);
-		});
-}
-
-function manager() {
-	fetch('manager.html').then(response => response.text()).then(
-		data =>{
-			document.getElementById("manager").innerHTML = data;
-		}).catch(error =>{
-			console.log("load failed", error);
-		});
-}
-
-function onLogout() {
-	myFetch("members1", {action:'logout'}, json => {
-		alert("로그아웃 되었습니다.");
-		location.href = "info.jsp";
-	});
-}
+console.log(location.pathname)

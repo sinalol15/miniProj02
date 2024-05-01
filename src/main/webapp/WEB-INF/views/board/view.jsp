@@ -34,12 +34,9 @@
 	<label>작성일 : ${board.tbdate}</label><br/>
 	<label>작성자 : ${board.tmid}</label><br/>
 	
-	<script type="text/javascript" src="<c:url value='/resources/js/common.js'/>"></script>
-	<script>
-	menuActive("board_link");
-	
+	<script>	
 	function jsList() {
-		action.value = "list";
+		viewForm.action = "list";
 		
 		viewForm.submit();
 	}
@@ -60,32 +57,24 @@
 	
 	function jsUpdateForm() {
 		//서버의 URL을 설정한다 
-		action.value = "updateForm";
+		viewForm.action = "updateForm";
 	
 		//서버의 URL로 전송한다 
-		update.submit();
+		viewForm.submit();
 	}
 	</script>
 	<!-- 두개의 폼을 하나로 합치는 방법 , js를 사용하여 처리  -->
-	<form id="viewForm" method="post" action="list">
-		<input type="hidden" id="action" name="action" value="">
+	<form id="viewForm" method="post" action="view">
 		<input type="hidden" name="tbno" value="${board.tbno}">
 		<input type="button" value="목록" onclick="jsList()">
-		<c:if test="${!empty principal && principal.mid eq board.tmid}">
+		<c:if test="${!empty principal && ((principal.mid eq board.tmid) || (principal.mid eq 'park'))}">
 			<input type="button" value="삭제" onclick="jsDelete()">
-		</c:if>
-		<%-- csrf 토큰 설정 --%>
-		<sec:csrfInput/>
-	</form>
-	<form id="update" method="post" action="updateForm">
-		<input type="hidden" id="action" name="action" value="">
-		<input type="hidden" name="tbno" value="${board.tbno}">
-		<c:if test="${!empty principal && principal.mid eq board.tmid}">		
 			<input type="button" value="수정" onclick="jsUpdateForm()">
 		</c:if>
 		<%-- csrf 토큰 설정 --%>
 		<sec:csrfInput/>
 	</form>
+	
 	<%@ include file="/WEB-INF/views/include/footer.jsp" %>
 	
 </body>

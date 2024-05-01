@@ -11,25 +11,6 @@
 	<title>List</title>
 	<%@ include file="/WEB-INF/views/include/css.jsp" %>
     <%@ include file="/WEB-INF/views/include/js.jsp" %>
-    <style>
-		th, td {
-		  border: 1px solid;
-		}
-		th {
-			border-color : #96D4D4;
-		}
-		td {
-			border-color : #D6EEEE;
-		}
-		tr:nth-child(even) {
-		  background-color: #D6EEEE;
-		  color:#96D4D4;
-		}
-		tr:nth-child(odd) {
-		  background-color: #96D4D4;
-		  color:white;
-		}
-	</style>
 </head>
 <body>
     <%@ include file="/WEB-INF/views/include/header.jsp" %>

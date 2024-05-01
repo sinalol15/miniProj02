@@ -7,28 +7,11 @@
 <html>
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>List</title>
 	<%@ include file="/WEB-INF/views/include/css.jsp" %>
     <%@ include file="/WEB-INF/views/include/js.jsp" %>
-	<style>
-		th, td {
-		  border: 1px solid;
-		}
-		th {
-			border-color : #96D4D4;
-		}
-		td {
-			border-color : #D6EEEE;
-		}
-		tr:nth-child(even) {
-		  background-color: #D6EEEE;
-		  color:#96D4D4;
-		}
-		tr:nth-child(odd) {
-		  background-color: #96D4D4;
-		  color:white;
-		}
-	</style>
+    <%@ include file="/WEB-INF/views/include/meta.jsp" %>
 </head>
 <body>	
     <%@ include file="/WEB-INF/views/include/header.jsp" %>
@@ -47,10 +30,8 @@
     	<input type="submit" value="검색">
     </form>
     
-   	<form id="listForm" action="view" method="post">
+	<form id="viewForm" action="view" method="post">
     	<input type="hidden" id="tbno" name="tbno">
-    	<input type="hidden" id="tmid" name="tmid">
-    	<%-- csrf 토큰 설정 --%>
 		<sec:csrfInput/>
     </form>
     
@@ -64,7 +45,8 @@
         </tr>
         <c:forEach var="board" items="${pageResponseVO.list}">
         <tr>
-            <td onclick="jsView('${board.tbno}', '${principal.mid}')"  style="cursor:pointer;">${board.tbno}</td>
+            <%-- <td onclick="jsView('${board.tbno}', '${principal.mid}')"  style="cursor:pointer;">${board.tbno}</td> --%>
+            <td style="cursor:pointer;"><a data-bs-toggle="modal" data-bs-target="#boardViewModel" data-bs-tbno="${board.tbno}">${board.tbno}</a></td>
             <td>${board.tbtitle}</td>
             <td>${board.tbdate}</td>
             <td>${board.tmid}</td>
@@ -96,13 +78,41 @@
 
     </div>
     
+    
+	<!-- 상세보기 Modal -->
+	<div class="modal fade" id="boardViewModel" role="dialog">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="staticBackdropLabel">게시물 상세보기</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+		      <label>게시물 번호:</label><span id="tbno"></span><br/>
+		      <label>제목 : </label><span id="tbtitle"></span><br/>
+		      <label>내용 : </label><span id="tbcontent"></span><br/>
+		      <label>조회수 :</label><span id="tbviewcount"></span><br/>
+		      <label>작성자 : </label><span id="tmid"></span><br/>
+		      <label>작성일 : </label><span id="tbdate"></span><br/>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+	        <button type="button" class="btn btn-secondary" id="btnDelete" >삭제</button>
+	        <button type="button" class="btn btn-secondary" id="btnUpdate">수정</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+    
     <form id="insertForm" method="post" action="insertForm">
     	<%-- csrf 토큰 설정 --%>
 		<sec:csrfInput/>
 		<input type="button" value="등록" onclick="jsInsertForm('${principal.mid}')">
 	</form>
 		
-	<script>	
+	<script>
+	menuActive("board_link");
+
 	document.querySelector(".pagination").addEventListener("click", function (e) {
 	    e.preventDefault()
 
@@ -116,7 +126,7 @@
 	    const num = target.dataset["num"];
 	    
 	    //페이지번호 설정 
-	    searchForm.innerHTML += `<input type='hidden' name='pageNo' value='\${num}'>`;
+	    searchForm.innerHTML += `<sec:csrfInput/><input type='hidden' name='pageNo' value='\${num}'>`;
 	    searchForm.submit();
 	});
 	
@@ -124,7 +134,100 @@
 	    searchForm.submit();
 	});
 	
-	function jsView(bn, id1) {
+	const boardViewModel = document.querySelector("#boardViewModel");
+	const span_tbno = document.querySelector(".modal-body #tbno");
+	const span_tbtitle = document.querySelector(".modal-body #tbtitle");
+	const span_tbcontent = document.querySelector(".modal-body #tbcontent");
+	const span_tbviewcount = document.querySelector(".modal-body #tbviewcount");
+	const span_tmid = document.querySelector(".modal-body #tmid");
+	const span_tbdate = document.querySelector(".modal-body #tbdate");
+	boardViewModel.addEventListener('shown.bs.modal', function (event) {
+		const a = event.relatedTarget;
+		const tbno = a.getAttribute('data-bs-tbno'); //a.dataset["bs-bno"] //, a.dataset.bs-bno 사용안됨
+		console.log("모달 대화 상자 출력... tbno ", tbno);
+		
+		span_tbno.innerText = "";
+		span_tbtitle.innerText = "";
+		span_tbcontent.innerText = "";
+		span_tbviewcount.innerText = "";
+		span_tmid.innerText = "";
+		span_tbdate.innerText = "";
+		const viewForm = document.querySelector("#viewForm");
+		console.log("viewForm", viewForm);
+		console.log("tbno", viewForm.querySelector("#tbno"));
+		viewForm.querySelector("#tbno").value = tbno;
+		myFetch("jsonBoardInfo", "viewForm", json => {
+			if(json.status == 0) {
+				//성공
+				const jsonBoard = json.jsonBoard; 
+				span_tbno.innerText = jsonBoard.tbno;
+				span_tbtitle.innerText = jsonBoard.tbtitle;
+				span_tbcontent.innerText = jsonBoard.tbcontent;
+				span_tbviewcount.innerText = jsonBoard.tbviewcount;
+				span_tmid.innerText = jsonBoard.tmid;
+				span_tbdate.innerText = jsonBoard.tbdate;
+				
+			} else {
+				alert(json.statusMessage);
+			}
+		});
+	})
+	
+	  // 모달 종료(hide) 버튼
+	  document.querySelector("#btnDelete").addEventListener("click", e => {
+		  if (confirm("정말로 삭제하시겠습니까?")) {
+				myFetch("delete", "viewForm", json => {
+					if(json.status == 0) {
+						//성공
+						alert("삭제 되었습니다");
+						location = "list";
+					} else {
+						alert(json.statusMessage);
+					}
+				});
+			} 
+	  })
+	  
+	  document.querySelector("#btnUpdate").addEventListener("click", e => {
+	    const a = e.relatedTarget;
+	    const tbno = a.getAttribute('data-bs-tbno');
+	    console.log("모달 대화 상자 출력... tbno ", tbno);
+	
+	    // Accessing the span elements
+	    const span_tbtitle = document.querySelector("#span_tbtitle");
+	    const span_tbcontent = document.querySelector("#span_tbcontent");
+	
+	    // Creating input elements for editable fields
+	    const input_tbtitle = document.createElement('input');
+	    input_tbtitle.type = 'text';
+	    input_tbtitle.value = span_tbtitle.innerText;
+	
+	    const input_tbcontent = document.createElement('textarea');
+	    input_tbcontent.value = span_tbcontent.innerText;
+	
+	    // Replace spans with input elements
+	    span_tbtitle.replaceWith(input_tbtitle);
+	    span_tbcontent.replaceWith(input_tbcontent);
+	
+	    const viewForm = document.querySelector("#viewForm");
+	    console.log("viewForm", viewForm);
+	    console.log("tbno", viewForm.querySelector("#span_tbno"));
+	    viewForm.querySelector("#span_tbno").value = tbno;
+	
+	    myFetch("jsonBoardInfo", "viewForm", json => {
+	        if (json.status == 0) {
+	            // 성공
+	            const jsonBoard = json.jsonBoard;
+	            // Set input values from JSON data
+	            input_tbtitle.value = jsonBoard.tbtitle;
+	            input_tbcontent.value = jsonBoard.tbcontent;
+	        } else {
+	            alert(json.statusMessage);
+	        }
+	    });
+	});
+	
+/* 	function jsView(bn, id1) {
 		//인자의 값을 설정한다 
 		tbno.value = bn;
 		tmid.value = id1;
@@ -132,11 +235,32 @@
 		//양식을 통해서 서버의 URL로 값을 전달한다
 		listForm.submit();
 		
-	}
+	} */
 	
 	function jsInsertForm(a) {
 		//서버의 URL로 전송한다 
 		insertForm.submit();
+	}
+	
+/* 	function jsDelete() {
+		if (confirm("정말로 삭제하시겠습니까?")) {
+			myFetch("delete", "viewForm", json => {
+				if(json.status == 0) {
+					//성공
+					alert("삭제 되었습니다");
+					location = "list";
+				} else {
+					alert(json.statusMessage);
+				}
+			});
+		}
+	} */
+	
+	function jsUpdateForm() {
+		viewForm.action = "updateForm";
+	
+		//서버의 URL로 전송한다 
+		viewForm.submit();
 	}
 	</script>
 	

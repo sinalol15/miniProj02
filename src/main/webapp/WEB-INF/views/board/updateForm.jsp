@@ -37,9 +37,7 @@
 	    </div>
     </form>
         
-	<script type="text/javascript" src="<c:url value='/resources/js/common.js'/>"></script>
-    
-    <script>
+    <script type="text/javascript">
     menuActive("board_link");
     
     const rForm = document.getElementById("rForm");
