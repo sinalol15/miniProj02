@@ -41,8 +41,16 @@ public class MboardService1 {
 	}
 	
 	public MboardVO1 view(MboardVO1 board) throws ServletException, IOException, SQLException {
-		boardMapper.incViewCount(board);
-		return boardMapper.read(board);
+		//view Count의 값을 증가한다. 
+		//만약 값을 증가 하지 못하면 게시물이 존재하지 않는 경우임  
+		if (0 == boardMapper.incViewCount(board)) {
+			return null; 
+		}
+		//view Count의 값이 증가된 객체를 얻는다
+		MboardVO1 resultVO = boardMapper.read(board);
+		log.info(resultVO.getTbviewcount());
+		log.info(resultVO.toString());
+		return resultVO;
 	}
 	
 	public int delete(MboardVO1 board) throws ServletException, IOException {
