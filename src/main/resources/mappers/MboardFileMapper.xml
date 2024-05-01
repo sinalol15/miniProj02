@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kosa.hello.board.MboardFileMapper">
+	<select id="getList" resultType="org.kosa.hello.entity.MboardFileVO">
+		*  
+		from tb_board_file
+		where bno = #{tbno}
+		order by board_file_id
+    </select>
+    
+	<select id="getBoardFile" resultType="org.kosa.hello.entity.MboardFileVO">
+    	*  
+		from tb_board_file
+		where board_file_id = #{board_file_id}
+	</select>
+	
+	<select id="getBoardFileVO" resultType="org.kosa.hello.entity.MboardFileVO">
+		select 
+			*  
+		from tb_board_file
+		where bno = #{tbno}
+		limit 0, 1
+	</select>
+	
+	<delete id="delete" >
+		delete
+		from tb_board_file 
+		where board_file_id = #{board_file_id}
+	</delete>
+	
+	<insert id="insert" >
+	insert into board_file_id (
+			bno
+			,original_filename
+			,real_filename
+			,content_type
+			,size
+		) values (
+			#{tbno}
+			,#{original_filename}
+			,#{real_filename}
+			,#{content_type}
+			,#{size}
+		) 
+	</insert>
+</mapper>

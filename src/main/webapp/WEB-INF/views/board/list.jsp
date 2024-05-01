@@ -94,6 +94,7 @@
 		      <label>조회수 :</label><span id="tbviewcount"></span><br/>
 		      <label>작성자 : </label><span id="tmid"></span><br/>
 		      <label>작성일 : </label><span id="tbdate"></span><br/>
+		      <label>첨부파일 : </label><span id="boardFile" data-board-file-no="" onclick="onBoardFileDownload(this)"></span><br/>
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -152,6 +153,7 @@
 		span_tbviewcount.innerText = "";
 		span_tmid.innerText = "";
 		span_tbdate.innerText = "";
+		boardFile.innerText = "";
 		const viewForm = document.querySelector("#viewForm");
 		console.log("viewForm", viewForm);
 		console.log("tbno", viewForm.querySelector("#tbno"));
@@ -162,11 +164,14 @@
 				const jsonBoard = json.jsonBoard; 
 				span_tbno.innerText = jsonBoard.tbno;
 				span_tbtitle.innerText = jsonBoard.tbtitle;
-				span_tbcontent.innerText = jsonBoard.tbcontent;
+				span_tbcontent.innerHTML = jsonBoard.tbcontent;
 				span_tbviewcount.innerText = jsonBoard.tbviewcount;
 				span_tmid.innerText = jsonBoard.tmid;
 				span_tbdate.innerText = jsonBoard.tbdate;
-				
+				//첨부파일명을 출력한다
+				boardFile.innerText = jsonBoard.boardFileVO.original_filename;
+				//첨부파일의 번호를 설정한다 
+				boardFile.setAttribute("data-board-file-no", jsonBoard.boardFileVO.board_file_id);
 			} else {
 				alert(json.statusMessage);
 			}
@@ -226,6 +231,12 @@
 	        }
 	    });
 	});
+	
+	const onBoardFileDownload = boardFile => {
+		const board_file_no = boardFile.getAttribute("data-board-file-no");
+		alert("첨부파일 번호 = " + board_file_no);
+		location.href = "<c:url value='/board/fileDownload/'/>" + board_file_no;
+	}
 	
 /* 	function jsView(bn, id1) {
 		//인자의 값을 설정한다 

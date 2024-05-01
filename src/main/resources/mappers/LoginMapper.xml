@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kosa.hello.login.LoginMapper">
+	<select id="login" resultType="org.kosa.hello.entity.MmemberVO1">
+		select 
+			*  
+		from tb_member   
+		where mid = #{mid}
+	</select>
+
+	<update id="updateMemberLastLogin">
+		update tb_member set 
+			member_last_login_time = now()
+		where mid = #{mid}  
+	</update>
+
+	<update id="loginCountInc" parameterType="String">
+		update tb_member set 
+			member_login_count = member_login_count + 1
+			, member_account_locked = case when member_login_count > 3 then 'Y' ELSE 'N' end 
+		where mid = #{mid} 
+	</update> 
+
+	<update id="loginCountClear">
+		update tb_member set 
+			 member_login_count = 0 
+			,member_account_locked = 'N'
+		where mid = #{mid} 
+	</update>
+</mapper>

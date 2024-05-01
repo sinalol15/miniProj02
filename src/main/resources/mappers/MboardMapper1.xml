@@ -12,7 +12,7 @@
         </where>
     </sql>
 
-    <select id="getList" resultType="org.kosa.hello.entity.MboardVO1">
+	<select id="getList" resultType="org.kosa.hello.entity.MboardVO1">
 		select 
 			b.*, m.mname tbwriter  
 		from tb_board b inner join tb_member m on b.tmid = m.mid
@@ -28,7 +28,10 @@
 	</select>
 	
 	<select id="read" resultType="org.kosa.hello.entity.MboardVO1">
-		select * from tb_board where tbno = #{tbno}
+		select 
+			b.*, m.mname bwriter  
+		from tb_board b inner join tb_member m on b.tmid = m.mid  
+		where tbno = #{tbno}
 	</select>
 	
 	<update id="incViewCount">

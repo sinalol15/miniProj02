@@ -8,6 +8,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>UpdateForm</title>
+    <%@ include file="/WEB-INF/views/include/meta.jsp" %>	
 	<%@ include file="/WEB-INF/views/include/css.jsp" %>
     <%@ include file="/WEB-INF/views/include/js.jsp" %>
     <style>
@@ -44,11 +45,10 @@
 	    
 	    <div>
 	        <input type="submit" value="수정">
-	        <a href="view?mid=${principal.mid}">취소</a>
+	        <a href="view?mid=${member.mid}">취소</a>
 	    </div>
     </form>
     
-	<script type="text/javascript" src="<c:url value='/resources/js/common.js'/>"></script>
     <script type="text/javascript">
 	menuActive("member_link");
 

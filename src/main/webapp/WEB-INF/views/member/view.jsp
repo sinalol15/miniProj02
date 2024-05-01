@@ -8,6 +8,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>View</title>
+    <%@ include file="/WEB-INF/views/include/meta.jsp" %>	
 	<%@ include file="/WEB-INF/views/include/css.jsp" %>
     <%@ include file="/WEB-INF/views/include/js.jsp" %>
 </head>

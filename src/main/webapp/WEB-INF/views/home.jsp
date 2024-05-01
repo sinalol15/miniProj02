@@ -7,10 +7,15 @@
 <html>
 <head>
 	<title>Home</title>
+    <%@ include file="/WEB-INF/views/include/meta.jsp" %>
 	<%@ include file="/WEB-INF/views/include/css.jsp" %>
     <%@ include file="/WEB-INF/views/include/js.jsp" %>
 </head>
 <body>
+	<script>
+	//회사 홈 페이지
+	menuActive("home_link");
+	</script>
     <%@ include file="/WEB-INF/views/include/header.jsp" %>
 	<%@ include file="/WEB-INF/views/include/footer.jsp" %>
 </body>

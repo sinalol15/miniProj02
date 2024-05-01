@@ -8,6 +8,7 @@
 <head>
 	<meta charset="UTF-8">
     <title>View</title>
+    <%@ include file="/WEB-INF/views/include/meta.jsp" %>
     <%@ include file="/WEB-INF/views/include/css.jsp" %>
     <%@ include file="/WEB-INF/views/include/js.jsp" %>
     <style>
@@ -34,7 +35,9 @@
 	<label>작성일 : ${board.tbdate}</label><br/>
 	<label>작성자 : ${board.tmid}</label><br/>
 	
-	<script>	
+	<script>
+	menuActive("board_link");
+
 	function jsList() {
 		viewForm.action = "list";
 		

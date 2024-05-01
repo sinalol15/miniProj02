@@ -9,6 +9,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>List</title>
+    <%@ include file="/WEB-INF/views/include/meta.jsp" %>	
 	<%@ include file="/WEB-INF/views/include/css.jsp" %>
     <%@ include file="/WEB-INF/views/include/js.jsp" %>
 </head>
@@ -31,7 +32,7 @@
     </form>
     
     <form id="listForm" action="view" method="post">
-    	<input type="hidden" id="mid" name="mid">
+    	<input type="hidden" id="mid" name="mid" value="">
     	<%-- csrf 토큰 설정 --%>
 		<sec:csrfInput/>
     </form>
@@ -77,6 +78,8 @@
     </div>
     
 	<script>
+	menuActive("member_link");
+
 	document.querySelector(".pagination").addEventListener("click", function (e) {
 	    e.preventDefault()
 
@@ -101,7 +104,6 @@
 	function jsView(memberid) {
 		//인자의 값을 설정한다 
 		mid.value = memberid;
-		
 		//양식을 통해서 서버의 URL로 값을 전달한다
 		listForm.submit();
 		

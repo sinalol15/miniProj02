@@ -1,4 +1,4 @@
-package org.kosa.hello;
+package org.kosa.hello.login;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

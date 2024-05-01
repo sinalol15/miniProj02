@@ -62,6 +62,21 @@ const myFetch = (url, formId, handler) => {
 	});	
 }
 
+//첨부파일 업로드용 fetch()함수  
+const myFileFetch  = (url, formId, handler) => {
+	const param = new FormData(document.querySelector("#" + formId));
+	const csrfToken = document.querySelector("meta[name='_csrf']").content;
+	const csrfHeader = document.querySelector("meta[name='_csrf_header']").content;
+	fetch(url + "?_csrf=" + csrfToken, {
+			method:"POST",
+			body : param,
+	}).then(res => res.json()).then(json => {
+		//서버로 부터 받은 결과를 사용해서 처리 루틴 구현  
+		console.log("json ", json );
+		if (handler) handler(json);
+	});	
+}
+
 const menuActive = link_id => {
    document.querySelector("#" + link_id).classList.add("active");
 }

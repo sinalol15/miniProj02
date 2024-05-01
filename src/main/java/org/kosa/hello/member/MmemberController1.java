@@ -1,4 +1,4 @@
-package org.kosa.hello;
+package org.kosa.hello.member;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -11,11 +11,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.kosa.hello.CodeService1;
 import org.kosa.hello.entity.MboardVO1;
 import org.kosa.hello.entity.MhobbyVO1;
 import org.kosa.hello.entity.MmemberVO1;
 import org.kosa.hello.entity.PageRequestVO;
-import org.kosa.hello.member.MmemberService1;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +23,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
@@ -57,9 +58,10 @@ public class MmemberController1 extends HttpServlet {
   	}
   	
 	@RequestMapping("/view")
-  	public String view(Authentication authentication, Model model) throws ServletException, IOException, SQLException {
+  	public String view(MmemberVO1 member, Model model) throws ServletException, IOException, SQLException {
   		log.info("상세 정보");
-  		model.addAttribute("member", memberService.view((MmemberVO1) authentication.getPrincipal()));
+  		System.out.println(member);
+  		model.addAttribute("member", memberService.view(member));
   		
   		return "member/view";
   	}

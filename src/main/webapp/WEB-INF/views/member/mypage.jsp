@@ -8,6 +8,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Mypage</title>
+    <%@ include file="/WEB-INF/views/include/meta.jsp" %>	
 	<%@ include file="/WEB-INF/views/include/css.jsp" %>
     <%@ include file="/WEB-INF/views/include/js.jsp" %>
 	<style>
@@ -35,6 +36,8 @@
 	
 	
 	<script>
+	menuActive("member_link");
+
 	function jsDelete() {
 		if (confirm("정말로 탈퇴하시겠습니까?")) {
 			myFetch("delete", "viewForm", json => {

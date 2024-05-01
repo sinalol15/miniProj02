@@ -8,6 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <title>LoginForm</title>
+    <%@ include file="/WEB-INF/views/include/meta.jsp" %>	
     <%@ include file="/WEB-INF/views/include/css.jsp" %>
     <%@ include file="/WEB-INF/views/include/js.jsp" %>
     <style>
@@ -46,10 +47,16 @@
     </form>
     
     <script type="text/javascript">
-	msg = "${error ? exception : ''}";
-	if (msg !== "")  {
-		alert(msg);
-	}
+    
+	menuActive("login_link");
+	
+	window.addEventListener("load", e => {
+		<%-- 로그인시 오류 메시지 출력 --%>
+		msg = "${error ? exception : ''}"; 
+		if (msg !== "")  {
+			alert(msg);
+		}
+	})
     
     /* const rForm = document.getElementById("rForm");
     //아이디 사용 여부 확인 

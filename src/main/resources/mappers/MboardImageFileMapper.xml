@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kosa.hello.board.MboardImageFileMapper">
+
+	<insert id="insert">
+		<selectKey order="AFTER" keyProperty="board_image_file_id" resultType="String">
+			select LAST_INSERT_ID() board_image_file_id
+		</selectKey>
+
+		insert into tb_board_image_file (
+			 board_token
+			,original_filename
+			,real_filename
+			,content_type
+			,size
+		) values (
+			 #{board_token}
+			,#{original_filename}
+			,#{real_filename}
+			,#{content_type}
+			,#{size}
+		) 
+	</insert>
+
+	<select id="findById" resultType="org.kosa.hello.entity.MboardImageFileVO">
+		SELECT  
+			 board_image_file_id 
+			,board_token
+			,bno
+			,original_filename
+			,real_filename
+			,content_type
+			,size
+		FROM  tb_board_image_file 
+		where board_image_file_id = #{board_image_file_id}
+	</select>
+
+	<update id="updateBoardNo" >
+		update tb_board_image_file set
+			 bno = #{tbno}
+		where board_token = #{board_token}	
+	</update>
+	
+	<select id="getBoardImageFileList" resultType="org.kosa.hello.entity.MboardImageFileVO">
+		select
+			*
+		from tb_board_image_file  
+		where board_token in 
+		<foreach collection="list" item="item" open="(" separator="," close=")" >
+			#{item.board_token}
+		</foreach> 
+	</select>
+
+	<delete id="deleteBoardToken" >
+		delete from tb_board_image_file  
+		where board_token in 
+		<foreach collection="list" item="item" open="(" separator="," close=")" >
+			#{item.board_token}
+		</foreach>
+	</delete>
+	
+	<select id="getBoardImages" resultType="org.kosa.hello.entity.MboardImageFileVO">
+		select
+			*
+		from tb_board_image_file  
+		where board_token = #{board_token}
+	</select>
+
+	<delete id="deleteBoardImageFiles" >
+		delete from tb_board_image_file  
+		where board_image_file_id in 
+		<foreach collection="list" item="item" open="(" separator="," close=")" >
+			#{item.board_image_file_id}
+		</foreach> 
+	</delete>
+
+</mapper>
