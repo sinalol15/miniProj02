@@ -68,7 +68,7 @@
 	<!-- 두개의 폼을 하나로 합치는 방법 , js를 사용하여 처리  -->
 	<form id="viewForm" method="post" action="list">
 		<input type="hidden" id="action" name="action" value="">
-		<input type="hidden" name="mid" value="${member.mid}">
+		<input type="hidden" id="mid" name="mid" value="${member.mid}">
 		<input type="button" value="목록" onclick="jsList()">
 		<input type="button" value="삭제" onclick="jsDelete()">
 		<input type="button" value="수정" onclick="jsUpdateForm()">

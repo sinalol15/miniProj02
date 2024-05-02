@@ -9,6 +9,8 @@ import org.kosa.hello.board.MboardImageFileMapper;
 import org.kosa.hello.board.MboardTokenMapper;
 import org.kosa.hello.entity.MboardImageFileVO;
 import org.kosa.hello.entity.MboardTokenVO;
+import org.kosa.hello.entity.MmemberVO1;
+import org.kosa.hello.member.MmemberMapper1;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -23,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SchedulerService {
 	private final MboardTokenMapper boardTokenMapper;
 	private final MboardImageFileMapper boardImageFileMapper;
+	private final MmemberMapper1 memberMapper;
 
 	@Scheduled(fixedDelay = 60000) // 60초마다 실행 
 	public void fileTokenAutoDelete() {
@@ -48,6 +51,21 @@ public class SchedulerService {
 			}
 			//임시로 사용된 게시물 토큰을 삭제한다
 			boardTokenMapper.deletes(map);
+		}
+	}
+	
+	@Scheduled(fixedDelay = 60000)
+	public void memberUnlockedAutoUpdate() {
+		System.out.println("10분 전 잠긴 계정을 활성화 시킨다");
+		//현재로부터 10분 전에 잠긴 계정의 mid 목록을 얻는다
+		List<MmemberVO1> memberList = memberMapper.lockedMembers();
+		if (memberList.size() != 0) {
+			log.info("memberLockedList : " + memberList);
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("list", memberList);
+			log.info("map : " + map);
+			
+			memberMapper.unlocked(map);
 		}
 	}
 }

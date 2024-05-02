@@ -32,6 +32,7 @@
     
 	<form id="viewForm" action="view" method="post">
     	<input type="hidden" id="tbno" name="tbno">
+    	<input type="hidden" id="tmid" name="tmid">
 		<sec:csrfInput/>
     </form>
     
@@ -46,7 +47,7 @@
         <c:forEach var="board" items="${pageResponseVO.list}">
         <tr>
             <%-- <td onclick="jsView('${board.tbno}', '${principal.mid}')"  style="cursor:pointer;">${board.tbno}</td> --%>
-            <td style="cursor:pointer;"><a data-bs-toggle="modal" data-bs-target="#boardViewModel" data-bs-tbno="${board.tbno}">${board.tbno}</a></td>
+            <td style="cursor:pointer;"><a data-bs-toggle="modal" data-bs-target="#boardViewModel" data-bs-tbno="${board.tbno}" data-bs-tmid="${board.tmid}">${board.tbno}</a></td>
             <td>${board.tbtitle}</td>
             <td>${board.tbdate}</td>
             <td>${board.tmid}</td>
@@ -98,8 +99,10 @@
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-	        <button type="button" class="btn btn-secondary" id="btnDelete" >삭제</button>
-	        <button type="button" class="btn btn-secondary" id="btnUpdate">수정</button>
+			<c:if test="${!empty principal && (principal.mid eq board.tmid || principal.mid eq 'park')}">	        
+		        <button type="button" class="btn btn-secondary" id="btnDelete" >삭제</button>
+		        <button type="button" class="btn btn-secondary" id="btnUpdate">수정</button>
+	        </c:if>
 	      </div>
 	    </div>
 	  </div>
@@ -145,6 +148,7 @@
 	boardViewModel.addEventListener('shown.bs.modal', function (event) {
 		const a = event.relatedTarget;
 		const tbno = a.getAttribute('data-bs-tbno'); //a.dataset["bs-bno"] //, a.dataset.bs-bno 사용안됨
+		const tmid = a.getAttribute('data-bs-tmid');
 		console.log("모달 대화 상자 출력... tbno ", tbno);
 		
 		span_tbno.innerText = "";
@@ -157,7 +161,9 @@
 		const viewForm = document.querySelector("#viewForm");
 		console.log("viewForm", viewForm);
 		console.log("tbno", viewForm.querySelector("#tbno"));
+		console.log("tmid", viewForm.querySelector("#tmid"));
 		viewForm.querySelector("#tbno").value = tbno;
+		viewForm.querySelector("#tmid").value = tmid;
 		myFetch("jsonBoardInfo", "viewForm", json => {
 			if(json.status == 0) {
 				//성공
@@ -196,6 +202,7 @@
 	  document.querySelector("#btnUpdate").addEventListener("click", e => {
 	    const a = e.relatedTarget;
 	    const tbno = a.getAttribute('data-bs-tbno');
+	    const tmid = a.getAttribute('data-bs-tmid');
 	    console.log("모달 대화 상자 출력... tbno ", tbno);
 	
 	    // Accessing the span elements
@@ -217,7 +224,9 @@
 	    const viewForm = document.querySelector("#viewForm");
 	    console.log("viewForm", viewForm);
 	    console.log("tbno", viewForm.querySelector("#span_tbno"));
+	    console.log("tmid", viewForm.querySelector("#span_tmid"));
 	    viewForm.querySelector("#span_tbno").value = tbno;
+	    viewForm.querySelector("#span_tmid").value = tmid;
 	
 	    myFetch("jsonBoardInfo", "viewForm", json => {
 	        if (json.status == 0) {

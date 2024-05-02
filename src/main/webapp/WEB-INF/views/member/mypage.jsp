@@ -28,11 +28,11 @@
        나의 페이지
     </h1>
    
-	<label>아이디 : ${principal.mid}</label> <br/>
-	<label>이름 : ${principal.mname}</label><br/>
-	<label>나이: ${principal.mage}</label><br/>
-	<label>이메일: ${principal.memail}</label><br/>
-	<label>취미: ${hobbies.hname}</label>
+	<label>아이디 : ${member.mid}</label> <br/>
+	<label>이름 : ${member.mname}</label><br/>
+	<label>나이: ${member.mage}</label><br/>
+	<label>이메일: ${member.memail}</label><br/>
+	<label>취미: ${member.hname}</label>
 	
 	
 	<script>
@@ -53,29 +53,20 @@
 	}
 	
 	function jsUpdateForm() {
-		if (confirm("정말로 수정하시겠습니까?")) {
-			//서버의 URL을 설정한다 
-			action.value = "updateForm";
-		
-			//서버의 URL로 전송한다 
-			update.submit();
-		}	
+		//서버의 URL을 설정한다 
+		viewForm.action = "updateForm";
+	
+		//서버의 URL로 전송한다 
+		viewForm.submit();
 	}
 	
 	</script>
 	<!-- 두개의 폼을 하나로 합치는 방법 , js를 사용하여 처리  -->
-	<form id="viewForm" method="post" action="members1">
+	<form id="viewForm" method="post" action="mypage">
 		<%-- csrf 토큰 설정 --%>
 		<sec:csrfInput/>
-		<input type="hidden" id="action" name="action" value="">
 		<input type="hidden" id="mid" name="mid" value="${member.mid}">
 		<input type="button" value="삭제" onclick="jsDelete()">
-	</form>
-	<form id="update" method="post" action="updateForm">
-		<%-- csrf 토큰 설정 --%>
-		<sec:csrfInput/>
-		<input type="hidden" id="action" name="action" value="">
-		<input type="hidden" name="mid" value="${member.mid}">
 		<input type="button" value="수정" onclick="jsUpdateForm()">
 	</form>
 	

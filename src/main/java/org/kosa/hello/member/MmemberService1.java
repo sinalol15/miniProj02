@@ -2,10 +2,17 @@ package org.kosa.hello.member;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import org.kosa.hello.board.MboardFileMapper;
+import org.kosa.hello.board.MboardImageFileMapper;
+import org.kosa.hello.board.MboardMapper1;
+import org.kosa.hello.board.MboardTokenMapper;
 import org.kosa.hello.entity.MboardVO1;
 import org.kosa.hello.entity.MhobbyVO1;
 import org.kosa.hello.entity.MmemberVO1;
@@ -16,16 +23,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class MmemberService1 implements UserDetailsService{
 	
-	@Autowired
-	private MmemberMapper1 memberMapper;
+	private final MmemberMapper1 memberMapper;
+	
+	private final PasswordEncoder encryptPassword;
 
 	public PageResponseVO<MmemberVO1> list(PageRequestVO pageRequestVO) throws Exception {
 		List<MmemberVO1> list = null;
@@ -88,11 +99,32 @@ public class MmemberService1 implements UserDetailsService{
 	}
 	
 	public int update(MmemberVO1 member) throws ServletException, IOException {
-		return memberMapper.update(member);
+		member.setPassword(encryptPassword);
+		int n = memberMapper.update(member);
+		memberMapper.deleteHobby(member);
+		Map<String, String> map = new HashMap<>();
+		map.put("mid", member.getMid());
+		for (String mhabbit : member.getMhabbit()) {
+			map.put("mhabbit", mhabbit);
+			log.info("map = {}", map);
+			memberMapper.hobbyFoundInsert(map);
+		}
+		
+		return n;
 	}
 	
 	public int insert(MmemberVO1 member) {
-		return memberMapper.insert(member);
+		member.setPassword(encryptPassword);
+		int n = memberMapper.insert(member);
+		Map<String, String> map = new HashMap<>();
+		map.put("mid", member.getMid());
+		for (String mhabbit : member.getMhabbit()) {
+			map.put("mhabbit", mhabbit);
+			log.info("map = {}", map);
+			memberMapper.hobbyFoundInsert(map);
+		}
+		
+		return n;
 	}
 	
 	public void updateUUID(MmemberVO1 member) {
@@ -106,17 +138,61 @@ public class MmemberService1 implements UserDetailsService{
 	public List<MhobbyVO1> hobbyFoundCheck(MmemberVO1 member) {
 		return memberMapper.hobbyFoundCheck(member);
 	}
-	
-	public int hobbyFoundInsert(MmemberVO1 member) {
-		int i=0;
-		for(String mhabbit: member.getMhabbit()) {
-			i = memberMapper.hobbyFoundInsert(member, mhabbit);
+
+	public int unlocked(MmemberVO1 member) {
+		int n=0;
+		List<String> mid_checked = member.getMid_checked();
+		if (mid_checked.size() != 0) {
+			List<MmemberVO1> memberList = new ArrayList<>();
+			for (String mid : mid_checked) {
+				memberList.add(MmemberVO1.builder().mid(mid).build());
+			}
+			
+			log.info("memberCheckedList : " + memberList);
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("list", memberList);
+			log.info("map : " + map);
+			n = memberMapper.unlocked(map);
 		}
-		return i;
+		return n;
 	}
 	
-	public MhobbyVO1 hobbiesName(MmemberVO1 member) {
-		return memberMapper.hobbiesName(member);
+	public int deleteUsers(MmemberVO1 member) {
+		int n=0;
+		List<String> mid_checked = member.getMid_checked();
+		if (mid_checked.size() != 0) {
+			List<MmemberVO1> memberList = new ArrayList<>();
+			for (String mid : mid_checked) {
+				memberList.add(MmemberVO1.builder().mid(mid).build());
+			}
+			
+			log.info("memberCheckedList : " + memberList);
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("list", memberList);
+			log.info("map : " + map);
+			n = memberMapper.deleteUsers(map);
+		}
+		return n;
 	}
+	
+//	public int hobbyFoundInsert(MmemberVO1 member) {
+//		int i=0;
+//		for(String mhabbit: member.getMhabbit()) {
+//			i = memberMapper.hobbyFoundInsert(member);
+//		}
+//		return i;
+//	}
+	
+//	public String hobbiesName(MmemberVO1 member) {
+//		StringBuilder sb = new StringBuilder();
+//		List<MhobbyVO1> list =  memberMapper.hobbiesName(member);
+//		for(MhobbyVO1 item : list) {
+//		
+//			sb.append(item.getHname()).append(" ");
+//		}
+//		System.out.println(sb);
+//		
+//		return sb.toString();
+//	}
 
 }

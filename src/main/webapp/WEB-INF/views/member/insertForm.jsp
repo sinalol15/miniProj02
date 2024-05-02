@@ -59,7 +59,7 @@
     </form>
     
     <script type="text/javascript">
-	menuActive("member_link");
+	menuActive("member_new_link");
     
     const rForm = document.getElementById("rForm");
     const mid = document.getElementById("mid");
@@ -74,7 +74,8 @@
     rForm.addEventListener("submit", e => {
     	//서버에 form data를 전송하지 않는다 
     	e.preventDefault();
-    	
+		console.log("지금 버튼 클릭")
+
     	if (validUserId == "" || mid.value != validUserId) {
     		alert("아이디 중복확인 해주세요");
     		return false;

@@ -37,23 +37,35 @@
 		<sec:csrfInput/>
     </form>
     
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>이름</th>
-            <th>나이</th>
-            <th>이메일</th>
-        </tr>
-        <c:forEach var="member" items="${pageResponseVO.list}">
-        <tr>
-            <td onclick="jsView('${member.mid}')"  style="cursor:pointer;">${member.mid}</td>
-            <td>${member.mname}</td>
-            <td>${member.mage}</td>
-            <td>${member.memail}</td>
-        </tr>
-        </c:forEach>
-    </table>
-    
+    <form id="changeForm" method="post" action="">
+	    <table>
+	        <tr>
+	        	<th></th>
+	            <th>ID</th>
+	            <th>이름</th>
+	            <th>나이</th>
+	            <th>이메일</th>
+	            <th>잠금 여부</th>
+	        </tr>
+	        
+	        <c:forEach var="member" items="${pageResponseVO.list}">
+	        <tr>
+	            <td><input type="checkbox" name="mid_checked" value="${member.mid}"></td>
+	            <td onclick="jsView('${member.mid}')"  style="cursor:pointer;">${member.mid}</td>
+	            <td>${member.mname}</td>
+	            <td>${member.mage}</td>
+	            <td>${member.memail}</td>
+	            <td>${member.member_account_locked}</td>
+	        </tr>
+	        </c:forEach>
+	    </table>
+   	
+		<input type="button" value="잠금 해제" onclick="jsUnlocked()">
+		<input type="button" value="탈퇴" onclick="jsDelete()">
+		<%-- csrf 토큰 설정 --%>
+		<sec:csrfInput/>
+	</form>
+	
     <!--  페이지 네비게이션 바 출력  -->
     <div class="float-end">
         <ul class="pagination flex-wrap">
@@ -107,6 +119,22 @@
 		//양식을 통해서 서버의 URL로 값을 전달한다
 		listForm.submit();
 		
+	}
+	
+	function jsUnlocked() {
+		myFetch("unlocked", "changeForm", json => {
+			if(json.status == 0) {
+				alert("활성화 되었습니다");
+				location = "list";
+			} else {
+				alert(json.statusMessage);
+			}
+		});
+	}
+	
+	function jsDelete() {
+		changeForm.action = "deleteUsers";
+		changeForm.submit();
 	}
 	</script>
 

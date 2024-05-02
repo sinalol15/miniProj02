@@ -18,6 +18,7 @@ import org.kosa.hello.entity.MboardImageFileVO;
 import org.kosa.hello.entity.MboardVO1;
 import org.kosa.hello.entity.PageRequestVO;
 import org.kosa.hello.entity.PageResponseVO;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,7 +39,7 @@ public class MboardService1 {
 	private final MboardFileMapper  boardFileMapper;
 	private final MboardTokenMapper  boardTokenMapper;
 	private final MboardImageFileMapper  boardImageFileMapper;
-
+	
 	//날자 서식을 생성한다
 	private final SimpleDateFormat date_format = new SimpleDateFormat(File.separator + "YYYY" + File.separator + "MM" + File.separator + "dd");
 	

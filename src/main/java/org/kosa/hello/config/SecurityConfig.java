@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -33,20 +34,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private AuthSucessHandler authSucessHandler;
 	@Autowired
 	private AuthFailureHandler authFailureHandler;
-
+	
+	@Autowired
+	private PasswordEncoder encryptPassword;
 	// BCryptPasswordEncoder는 Spring Security에서 제공하는 비밀번호 암호화 객체 (BCrypt라는 해시 함수를 이용하여 패스워드를 암호화 한다.)
 	// 회원 비밀번호 등록시 해당 메서드를 이용하여 암호화해야 로그인 처리시 동일한 해시로 비교한다.
 	// 의존성 주입을 위한 함수를 Bean 객체로 리턴할 수 있게 함수를 구현한다 
-	@Bean
-	public BCryptPasswordEncoder encryptPassword() {
-		return new BCryptPasswordEncoder();
-	}
+//	@Bean
+//	public BCryptPasswordEncoder encryptPassword() {
+//		return new BCryptPasswordEncoder();
+//	}
 
 	// 시큐리티가 로그인 과정에서 password를 가로챌때 해당 해쉬로 암호화해서 비교한다.
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		                                       //아래 부분은 의존성 주입 함수를 호출함        
-		auth.userDetailsService(memberService).passwordEncoder(encryptPassword());
+//		auth.userDetailsService(memberService).passwordEncoder(encryptPassword());
+		auth.userDetailsService(memberService).passwordEncoder(encryptPassword);
 	}
 
 	//url 설정 
@@ -60,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http//.csrf().disable()	// csrf 토큰을 비활성화
     	.authorizeRequests() // 요청 URL에 따라 접근 권한을 설정
-		.antMatchers("/q", "/login/loginForm", "/member/insertForm", "/member/existUserId", "/js/**","/css/**","/image/**").permitAll() // 해당 경로들은 접근을 허용
+		.antMatchers("/q", "/login/loginForm", "/member/insertForm","/member/insert", "/member/existUserId", "/member/loginForm", "/js/**","/css/**","/image/**").permitAll() // 해당 경로들은 접근을 허용
 		.anyRequest() // 다른 모든 요청은
 		.authenticated() // 인증된 유저만 접근을 허용
 	.and()

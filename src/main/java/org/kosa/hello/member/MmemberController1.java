@@ -1,6 +1,7 @@
 package org.kosa.hello.member;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.kosa.hello.entity.MhobbyVO1;
 import org.kosa.hello.entity.MmemberVO1;
 import org.kosa.hello.entity.PageRequestVO;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -65,6 +67,32 @@ public class MmemberController1 extends HttpServlet {
   		
   		return "member/view";
   	}
+	
+	@RequestMapping("/unlocked")
+	@ResponseBody
+	public Map<String, Object> unlocked(@RequestBody MmemberVO1 member, Model model) {
+		log.info("계정 활성화");
+		int updated = memberService.unlocked(member);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		if(updated > 0) {
+			map.put("status", 0);
+		} else {
+			map.put("status", -99);
+			map.put("statusMessage", "계정 활성화에 실패했습니다.");
+		}
+		return map;
+	}
+	
+	@RequestMapping("/deleteUsers")
+  	public String deleteUsers(MmemberVO1 member, Model model) throws ServletException, IOException {
+  		log.info("계정 삭제");
+  		
+  		model.addAttribute("member", memberService.deleteUsers(member));
+		
+		return "redirect:list";
+  	}
   	
 	@RequestMapping("/delete")
 	@ResponseBody
@@ -96,22 +124,15 @@ public class MmemberController1 extends HttpServlet {
   	
 	@RequestMapping("/update")
 	@ResponseBody
-  	public Map<String, Object> update(@RequestBody MmemberVO1 member, @RequestBody MhobbyVO1 hobby) throws ServletException, IOException {
+  	public Map<String, Object> update(@RequestBody MmemberVO1 member) throws ServletException, IOException {
   		log.info("수정");
   		
   		int updated1 = memberService.update(member);
-  		List<MhobbyVO1> updated2 = memberService.hobbyFoundCheck(member);
   		
   		Map<String, Object> map = new HashMap<String, Object>();
   		
-  		if (updated1 == 1) {
+  		if (updated1 > 0) {
   			map.put("status", 0);
-  	  		if (updated2 != null) {
-  	  			map.put("status", 0);
-  	  		} else {
-  	  			map.put("status", -99);
-  	  			map.put("statusMessage", "수정할 정보를 다시 입력해주세요.");
-  	  		}
   		} else {
   			map.put("status", -99);
   			map.put("statusMessage", "수정에 실패했습니다.");
@@ -131,15 +152,15 @@ public class MmemberController1 extends HttpServlet {
   	
 	@RequestMapping("/insert")
 	@ResponseBody
-  	public Map<String, Object> insert(Authentication authentication, Model model) throws ServletException, IOException {
+  	public Map<String, Object> insert(@RequestBody MmemberVO1 member, Model model) throws ServletException, IOException {
   		log.info("가입");
   		Map<String, Object> map = new HashMap<String, Object>();
   		
-  		if (authentication.getPrincipal() == null) {
+  		if (member.getMid() == null) {
   			map.put("status", -1);
   			map.put("statusMessage", "id에 null값이 들어갔습니다.");
   		} else {
-  			int updated = memberService.insert((MmemberVO1) authentication.getPrincipal());
+  			int updated = memberService.insert(member);
   			
   			if (updated == 1) {
   				map.put("status", 0);
@@ -172,40 +193,41 @@ public class MmemberController1 extends HttpServlet {
   	public Object loginForm(MboardVO1 board, Model model) throws ServletException, IOException{
   		log.info("로그인 양식");
   		
-  		return "member/loginForm";
+  		return "login/loginForm";
   	}
 
-	@RequestMapping("/login")
-	@ResponseBody
-	public Map<String, Object> login(@RequestBody MmemberVO1 memberVO, HttpSession session) throws ServletException, IOException {
-		log.info("로그인 -> {}", memberVO);
-		MmemberVO1 loginVO = memberService.login(memberVO);
-		
-		Map<String, Object> map = new HashMap<>();
-		if (loginVO != null) {
-			session.setAttribute("loginVO", loginVO);
-			map.put("loginVO", loginVO);
-			map.put("status", 0);
-		} else {
-			map.put("status", -99);
-			map.put("statusMessage", "로그인에 실패하였습니다.");
-		}
-		
-		return map;
-	}
-  	
-	@RequestMapping("/logout")
-	@ResponseBody
-  	public Map<String, Object> logout(Model model) throws IOException {
-  		Map<String, Object> map = new HashMap<String, Object>();
-
-  		return map;
-  	}
+//	@RequestMapping("/login")
+//	@ResponseBody
+//	public Map<String, Object> login(@RequestBody MmemberVO1 memberVO, HttpSession session) throws ServletException, IOException {
+//		log.info("로그인 -> {}", memberVO);
+//		MmemberVO1 loginVO = memberService.login(memberVO);
+//		
+//		Map<String, Object> map = new HashMap<>();
+//		if (loginVO != null) {
+//			session.setAttribute("loginVO", loginVO);
+//			map.put("loginVO", loginVO);
+//			map.put("status", 0);
+//		} else {
+//			map.put("status", -99);
+//			map.put("statusMessage", "로그인에 실패하였습니다.");
+//		}
+//		
+//		return map;
+//	}
+//  	
+//	@RequestMapping("/logout")
+//	@ResponseBody
+//  	public Map<String, Object> logout(Model model) throws IOException {
+//  		Map<String, Object> map = new HashMap<String, Object>();
+//
+//  		return map;
+//  	}
   	
 	@RequestMapping("/mypage")
-  	public String mypage(MmemberVO1 member, Model model) throws ServletException, IOException {
-  		log.info("마이 페이지");
-
+  	public String mypage(Authentication authentication, Model model) throws ServletException, IOException, SQLException {
+		
+  		log.info("마이 페이지 {}", authentication.getPrincipal());
+  		model.addAttribute("member", memberService.view((MmemberVO1) authentication.getPrincipal()));
   		return "member/mypage";
   	}
 

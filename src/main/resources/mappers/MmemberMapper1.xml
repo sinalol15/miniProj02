@@ -20,7 +20,7 @@
 	
 	<select id="getList" resultType="org.kosa.hello.entity.MmemberVO1">
 	    select 
-			mid, mname, mage, memail 
+			mid, mname, mage, memail, member_account_locked 
 		from tb_member
 		<include refid="search"/>
 		order by mid desc limit #{skip}, #{size}
@@ -44,7 +44,9 @@
 	</select>
 	
 	<select id="read" resultType="org.kosa.hello.entity.MmemberVO1">
-		select * from tb_member where mid = #{mid}
+		select *,
+			(select group_concat(TB_HABBIT.HNAME order by hname) from tb_mhabbit JOIN TB_HABBIT ON hnumber = mhnumber WHERE mhid = #{mid}) hname
+		from tb_member where mid = #{mid}
 	</select>
 	
 	<delete id="delete">
@@ -75,7 +77,7 @@
 		insert into tb_mhabbit values (#{mid}, #{mhabbit})
 	</insert>
 	
-	<select id="hobbiesName" resultType="org.kosa.hello.entity.MmemberVO1">
+	<select id="hobbiesName" resultType="org.kosa.hello.entity.MhobbyVO1">
 		select hname from tb_mhabbit JOIN TB_MEMBER ON mid = mhid JOIN TB_HABBIT ON hnumber = mhnumber WHERE mid = #{mid} order by mhid
 	</select>
 	
@@ -89,7 +91,7 @@
 		update tb_member set 
 			member_login_count = member_login_count + 1
 			<choose>
-				<when test="member_login_count > 5">
+				<when test="member_login_count >= 3">
 					, member_account_locked = 'Y'
 				</when>
 				<otherwise>
@@ -105,4 +107,37 @@
 			,member_account_locked = 'N'
 		where mid = #{mid}
 	</update>
+	
+	<select id="lockedMembers" resultType="org.kosa.hello.entity.MmemberVO1">
+		<!--  현재 시간 기준으로 Member_last_login_time 10분전에 member_account_locked가 'Y'이 됐던 사용자의 정보를 가져온다 -->
+		<![CDATA[
+			SELECT mid 
+			FROM tb_member
+			WHERE member_login_count >= 2 
+				AND member_last_login_time < DATE_ADD(NOW(), INTERVAL -10 MINUTE)
+		]]>
+	</select>
+	
+	<update id="unlocked">
+		<!-- member_account_locked가 'Y'가 된 사용자의 count와 locked를 0과 'N'으로 바꿔준다 -->
+		update tb_member
+		set member_login_count = 0,
+			member_account_locked = 'N'
+		where mid in 
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+			#{item.mid} 
+		</foreach>
+	</update>
+	
+	<delete id="deleteUsers">
+		delete from tb_member where mid in 
+		<foreach collection="list" item="item" open="(" separator="," close=")">
+			#{item.mid} 
+		</foreach>
+	</delete>
+	
+	<delete id="deleteHobby">
+		delete FROM tb_mhabbit where mhid=#{mid}
+	</delete>
+
 </mapper>

@@ -51,6 +51,7 @@ const myFetch = (url, formId, handler) => {
 		headers[csrfHeader] = csrfToken 
 	}
 	console.log("headers", headers)
+	console.log("param", param)
 	fetch(url, {
 			method:"POST",
 			body : param,

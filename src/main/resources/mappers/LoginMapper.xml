@@ -19,7 +19,7 @@
 	<update id="loginCountInc" parameterType="String">
 		update tb_member set 
 			member_login_count = member_login_count + 1
-			, member_account_locked = case when member_login_count > 3 then 'Y' ELSE 'N' end 
+			, member_account_locked = case when member_login_count >= 2 then 'Y' ELSE 'N' end 
 		where mid = #{mid} 
 	</update> 
 

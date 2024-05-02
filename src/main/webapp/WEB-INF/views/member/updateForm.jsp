@@ -44,22 +44,16 @@
 		</c:forEach>
 	    
 	    <div>
-	        <input type="submit" value="수정">
-	        <a href="view?mid=${member.mid}">취소</a>
+	        <input type="button" value="수정" onclick="jsUpdate()">
+	        <a href="mypage?mid=${member.mid}">취소</a>
 	    </div>
     </form>
     
     <script type="text/javascript">
 	menuActive("member_link");
 
-    const rForm = document.getElementById("rForm");
-     
-    rForm.addEventListener("submit", e => {
-    	//서버에 form data를 전송하지 않는다 
-    	e.preventDefault();
-    	
+    function jsUpdate() {
     	if (mpassword.value != mpassword2.value) {
-        	
     		alert("비밀번호가 잘못되었습니다.")
     		mpassword2.value = "";
     		mpassword2.focus();
@@ -75,7 +69,7 @@
     			alert(json.statusMessage);
     		}
     	});
-    });
+    }
     </script>
 	<%@ include file="/WEB-INF/views/include/footer.jsp" %>
 
