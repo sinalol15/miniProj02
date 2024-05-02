@@ -16,8 +16,10 @@ import javax.servlet.ServletException;
 import org.kosa.hello.entity.MboardFileVO;
 import org.kosa.hello.entity.MboardImageFileVO;
 import org.kosa.hello.entity.MboardVO1;
+import org.kosa.hello.entity.MmemberVO1;
 import org.kosa.hello.entity.PageRequestVO;
 import org.kosa.hello.entity.PageResponseVO;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,11 +64,12 @@ public class MboardService1 {
 	}
 	
 	@Transactional
-	public MboardVO1 view(MboardVO1 board) throws ServletException, IOException, SQLException {
+	public MboardVO1 view(MboardVO1 board, Authentication authentication) throws ServletException, IOException, SQLException {
 		//view Count의 값을 증가한다. 
-		//만약 값을 증가 하지 못하면 게시물이 존재하지 않는 경우임  
-		if (0 == boardMapper.incViewCount(board)) {
-			return null; 
+		//만약 값을 증가 하지 못하면 게시물이 존재하지 않는 경우임 
+		MmemberVO1 memberVO = (MmemberVO1) authentication.getPrincipal();
+		if (!memberVO.getMid().equals(board.getTmid())) {
+			boardMapper.incViewCount(board); 
 		}
 		//view Count의 값이 증가된 객체를 얻는다
 		MboardVO1 resultVO = boardMapper.read(board);

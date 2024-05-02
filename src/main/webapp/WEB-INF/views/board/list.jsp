@@ -99,7 +99,7 @@
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-			<c:if test="${!empty principal && (principal.mid eq board.tmid || principal.mid eq 'park')}">	        
+			<c:if test="${!empty principal && (principal.mid eq tmid || principal.mid eq 'park')}">        
 		        <button type="button" class="btn btn-secondary" id="btnDelete" >삭제</button>
 		        <button type="button" class="btn btn-secondary" id="btnUpdate">수정</button>
 	        </c:if>

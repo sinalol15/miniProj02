@@ -31,7 +31,7 @@
 	</delete>
 	
 	<insert id="insert" >
-	insert into board_file_id (
+	insert into tb_board_file (
 			bno
 			,original_filename
 			,real_filename

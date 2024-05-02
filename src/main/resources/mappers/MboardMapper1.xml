@@ -49,6 +49,6 @@
 	</update>
 	
 	<insert id="insert">
-		insert into TB_BOARD (tbno, tbtitle, tbcontent, tmid) values (seq_bno.nextval, #{tbtitle}, #{tbcontent}, #{tmid})
+		insert into TB_BOARD (tbtitle, tbcontent, tmid) values (#{tbtitle}, #{tbcontent}, #{tmid})
 	</insert>
 </mapper>

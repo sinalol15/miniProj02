@@ -35,8 +35,8 @@
 	<form id="rForm" action="insert" method="post" enctype="multipart/form-data">
 		<!-- 게시물 토큰을 설정한다 -->
         <input type="hidden" id="board_token" name="board_token" value="${board_token}"><br/>
-        <input class="btitle" id="btitle" name="btitle" required="required" placeholder="게시물 제목을 입력해주세요"><br/>
-        <textarea id="bcontent" name="bcontent" required="required" placeholder="게시물 내용을 입력해주세요">
+        <input class="btitle" id="btitle" name="tbtitle" required="required" placeholder="게시물 제목을 입력해주세요"><br/>
+        <textarea id="bcontent" name="tbcontent" required="required" placeholder="게시물 내용을 입력해주세요">
         </textarea>
         <div id="div_file">
 			<input  type='file' name='file' />

@@ -66,6 +66,7 @@ const myFetch = (url, formId, handler) => {
 //첨부파일 업로드용 fetch()함수  
 const myFileFetch  = (url, formId, handler) => {
 	const param = new FormData(document.querySelector("#" + formId));
+	console.log("param[btitle]", param.get("btitle"));
 	const csrfToken = document.querySelector("meta[name='_csrf']").content;
 	const csrfHeader = document.querySelector("meta[name='_csrf_header']").content;
 	fetch(url + "?_csrf=" + csrfToken, {

@@ -66,19 +66,19 @@ public class MboardController1{
 	}
 	
     @RequestMapping("/view")
-	public String view(MboardVO1 board, Model model) throws ServletException, IOException, SQLException {
+	public String view(MboardVO1 board, Model model, Authentication authentication) throws ServletException, IOException, SQLException {
 		log.info("목록");
-		model.addAttribute("board", boardService.view(board));
+		model.addAttribute("board", boardService.view(board, authentication));
 		
 		return "board/view";
 	}
     
 	@RequestMapping("jsonBoardInfo")
 	@ResponseBody
-	public Map<String, Object> jsonBoardInfo(@RequestBody MboardVO1 board) throws ServletException, IOException, SQLException {
+	public Map<String, Object> jsonBoardInfo(@RequestBody MboardVO1 board, Authentication authentication) throws ServletException, IOException, SQLException {
 		log.info("json 상세보기 -> {}", board);
 		//1. 처리
-		MboardVO1 resultVO = boardService.view(board);
+		MboardVO1 resultVO = boardService.view(board, authentication);
 
 		Map<String, Object> map = new HashMap<>();
 		if (resultVO != null) { //성공
@@ -145,14 +145,14 @@ public class MboardController1{
 	
     @RequestMapping("/insert")
     @ResponseBody
-	public Map<String, Object> insert(@RequestBody MboardVO1 board, HttpSession session) throws ServletException, IOException {
+	public Map<String, Object> insert(MboardVO1 board, Authentication authentication) throws ServletException, IOException {
 		log.info("입력");
+		log.info("board => {}", board);
 		Map<String, Object> map = new HashMap<String, Object>();
+		MmemberVO1 memberVO = (MmemberVO1) authentication.getPrincipal();
 		
-		log.info("입력 sessionId = " + session.getId());
-		MmemberVO1 loginVO = (MmemberVO1)session.getAttribute("loginVO");
-		if (loginVO != null) {
-			board.setTmid(loginVO.getMid());
+		if (memberVO!= null) {
+			board.setTmid(memberVO.getMid());
 			
 			int updated = boardService.insert(board);
 			
