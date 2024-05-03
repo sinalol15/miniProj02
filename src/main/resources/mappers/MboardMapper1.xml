@@ -13,9 +13,16 @@
     </sql>
 
 	<select id="getList" resultType="org.kosa.hello.entity.MboardVO1">
-		select 
-			b.*, m.mname tbwriter  
-		from tb_board b inner join tb_member m on b.tmid = m.mid
+		SELECT 
+		    b.*, 
+		    m.mname AS tbwriter, 
+		    CASE 
+		        WHEN b.tbdate > DATE_ADD(NOW(), INTERVAL -1 DAY) THEN true  
+		        ELSE false 
+		    END AS isNew
+		FROM 
+		    tb_board b 
+		    INNER JOIN tb_member m ON b.tmid = m.mid
 		<include refid="search"/>
 		order by tbno desc limit #{skip}, #{size}
     </select>

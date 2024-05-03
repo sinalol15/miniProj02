@@ -61,7 +61,6 @@ public class MboardController1{
 		
 		model.addAttribute("pageResponseVO", boardService.list(pageRequestVO));
 		model.addAttribute("sizes", codeService.getList1());
-		
 		return "board/list";
 	}
 	

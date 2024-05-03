@@ -19,6 +19,7 @@ public class MboardVO1 {
 	private String tmid;
 	private String mname;
 	private String tbviewcount;
+	private String isNew;
 
 	private String action;
 	

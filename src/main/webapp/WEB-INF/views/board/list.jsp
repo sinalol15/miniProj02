@@ -12,6 +12,11 @@
 	<%@ include file="/WEB-INF/views/include/css.jsp" %>
     <%@ include file="/WEB-INF/views/include/js.jsp" %>
     <%@ include file="/WEB-INF/views/include/meta.jsp" %>
+    <%-- 부트스트랩5 css --%>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <%-- ckeditor 관련 자바 스크립트  --%>
+	<script src="https://cdn.ckeditor.com/ckeditor5/12.4.0/classic/ckeditor.js"></script>
+	<script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>
 </head>
 <body>	
     <%@ include file="/WEB-INF/views/include/header.jsp" %>
@@ -38,6 +43,7 @@
     
     <table>
         <tr>
+        	<th></th>
             <th>게시물번호</th>
             <th>제목</th>
             <th>작성일</th>
@@ -46,6 +52,12 @@
         </tr>
         <c:forEach var="board" items="${pageResponseVO.list}">
         <tr>
+        	<c:if test="${board.isNew eq 1}">
+        		<td><img src="/image/new.png" alt="new" width="30" height="30"></td>
+       		</c:if>
+       		<c:if test="${board.isNew eq 0}">
+       			<td>  </td>
+       		</c:if>
             <%-- <td onclick="jsView('${board.tbno}', '${principal.mid}')"  style="cursor:pointer;">${board.tbno}</td> --%>
             <td style="cursor:pointer;"><a data-bs-toggle="modal" data-bs-target="#boardViewModel" data-bs-tbno="${board.tbno}" data-bs-tmid="${board.tmid}">${board.tbno}</a></td>
             <td>${board.tbtitle}</td>
@@ -84,26 +96,54 @@
 	<div class="modal fade" id="boardViewModel" role="dialog">
 	  <div class="modal-dialog">
 	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h5 class="modal-title" id="staticBackdropLabel">게시물 상세보기</h5>
-	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      <div id="view" style="display:">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="staticBackdropLabel">게시물 상세보기</h5>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">
+			      <label>게시물 번호:</label><span id="tbno"></span><br/>
+			      <label>제목 : </label><span id="tbtitle"></span><br/>
+			      <label>내용 : </label><span id="tbcontent"></span><br/>
+			      <label>조회수 :</label><span id="tbviewcount"></span><br/>
+			      <label>작성자 : </label><span id="tmid"></span><br/>
+			      <label>작성일 : </label><span id="tbdate"></span><br/>
+			      <label>첨부파일 : </label><span id="boardFile" data-board-file-no="" onclick="onBoardFileDownload(this)"></span><br/>
+		      </div>
 	      </div>
-	      <div class="modal-body">
-		      <label>게시물 번호:</label><span id="tbno"></span><br/>
-		      <label>제목 : </label><span id="tbtitle"></span><br/>
-		      <label>내용 : </label><span id="tbcontent"></span><br/>
-		      <label>조회수 :</label><span id="tbviewcount"></span><br/>
-		      <label>작성자 : </label><span id="tmid"></span><br/>
-		      <label>작성일 : </label><span id="tbdate"></span><br/>
-		      <label>첨부파일 : </label><span id="boardFile" data-board-file-no="" onclick="onBoardFileDownload(this)"></span><br/>
+	      <div id="update" style="display:none">
+	      	  <div class="modal-header">
+		        <h5 class="modal-title" id="staticBackdropLabel">게시물 수정 양식</h5>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">
+			      <label>게시물 번호:</label><span id="tbno2"></span><br/>
+			      <label>제목 : </label><input type="text" id="tbtitle2" value="${board.tbtitle}"><br/>
+			      <label>내용 : </label><input type="text" id="tbcontent2" ><br/>
+			      <label>조회수 :</label><span id="tbviewcount2"></span><br/>
+			      <label>작성자 : </label><span id="tmid2"></span><br/>
+			      <label>작성일 : </label><span id="tbdate2"></span><br/>
+			      <label>첨부파일 : </label><span id="boardFile2" data-board-file-no="" onclick="onBoardFileDownload(this)"></span><br/>
+		      </div>
+		      <div id="div_file">
+				  <input  type='file' name='file' />
+			  </div>
 	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-			<c:if test="${!empty principal && (principal.mid eq tmid || principal.mid eq 'park')}">        
-		        <button type="button" class="btn btn-secondary" id="btnDelete" >삭제</button>
+	      <div id="viewButton" style="display:">
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+		        <div id="updateDiv" style="display:none">
+			        <button type="button" class="btn btn-secondary" id="btnDelete">삭제</button>
+			        <button type="button" class="btn btn-secondary" id="btnUpdateForm">수정</button>
+		        </div>
+		      </div>
+		  </div>
+		  <div id="updateButton" style="display:none">
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" id="btnCancle">취소</button>
 		        <button type="button" class="btn btn-secondary" id="btnUpdate">수정</button>
-	        </c:if>
-	      </div>
+		      </div>
+		  </div>
 	    </div>
 	  </div>
 	</div>
@@ -145,10 +185,41 @@
 	const span_tbviewcount = document.querySelector(".modal-body #tbviewcount");
 	const span_tmid = document.querySelector(".modal-body #tmid");
 	const span_tbdate = document.querySelector(".modal-body #tbdate");
+	
+	const span_tbno2 = document.querySelector(".modal-body #tbno2");
+	const span_tbtitle2 = document.querySelector(".modal-body #tbtitle2");
+	const span_tbcontent2 = document.querySelector(".modal-body #tbcontent2");
+	const span_tbviewcount2 = document.querySelector(".modal-body #tbviewcount2");
+	const span_tmid2 = document.querySelector(".modal-body #tmid2");
+	const span_tbdate2 = document.querySelector(".modal-body #tbdate2");
+	
+	const csrfParameter = document.querySelector("meta[name='_csrf_parameter']").content;
+	const csrfToken = document.querySelector("meta[name='_csrf']").content;
+	const board_image_url = "<c:url value='/board/boardImageUpload?board_token=${board_token}&'/>" + csrfParameter + "=" + csrfToken;
+	//cfeditor관련 설정 
+	let bcontent; //cfeditor의 객체를 저장하기 위한 변수 
+	ClassicEditor.create(document.querySelector('#tbcontent2'),{
+		//이미지 업로드 URL을 설정한다 
+		ckfinder: {
+			uploadUrl : board_image_url
+		}
+	})
+	.then(editor => {
+		console.log('Editor was initialized');
+		//ckeditor객체를 전역변수 bcontent에 설정함 
+		window.bcontent = editor;
+	})
+	.catch(error => {
+		console.error(error);
+	});
+	
 	boardViewModel.addEventListener('shown.bs.modal', function (event) {
+		
+		document.querySelector("#updateDiv").style.display = "none";
 		const a = event.relatedTarget;
 		const tbno = a.getAttribute('data-bs-tbno'); //a.dataset["bs-bno"] //, a.dataset.bs-bno 사용안됨
 		const tmid = a.getAttribute('data-bs-tmid');
+		const mid = "${principal.mid}";
 		console.log("모달 대화 상자 출력... tbno ", tbno);
 		
 		span_tbno.innerText = "";
@@ -158,6 +229,14 @@
 		span_tmid.innerText = "";
 		span_tbdate.innerText = "";
 		boardFile.innerText = "";
+		
+		span_tbno2.innerText = "";
+		span_tbtitle2.innerText = "";
+		span_tbtitle2.innerText = "";
+		span_tbcontent2.innerText = "";
+		span_tmid2.innerText = "";
+		span_tbdate2.innerText = "";
+		
 		const viewForm = document.querySelector("#viewForm");
 		console.log("viewForm", viewForm);
 		console.log("tbno", viewForm.querySelector("#tbno"));
@@ -166,6 +245,11 @@
 		viewForm.querySelector("#tmid").value = tmid;
 		myFetch("jsonBoardInfo", "viewForm", json => {
 			if(json.status == 0) {
+				
+				if (mid == tmid || mid == 'park') {
+					document.querySelector("#updateDiv").style.display = "";
+				}        
+
 				//성공
 				const jsonBoard = json.jsonBoard; 
 				span_tbno.innerText = jsonBoard.tbno;
@@ -174,6 +258,14 @@
 				span_tbviewcount.innerText = jsonBoard.tbviewcount;
 				span_tmid.innerText = jsonBoard.tmid;
 				span_tbdate.innerText = jsonBoard.tbdate;
+				
+				span_tbno2.innerText = jsonBoard.tbno;
+				span_tbtitle2.innerText = jsonBoard.tbtitle;
+				span_tbcontent2.innerText = jsonBoard.tbcontent;
+				span_tbviewcount2.innerText = jsonBoard.tbviewcount;
+				span_tmid2.innerText = jsonBoard.tmid;
+				span_tbdate2.innerText = jsonBoard.tbdate;
+				
 				//첨부파일명을 출력한다
 				boardFile.innerText = jsonBoard.boardFileVO.original_filename;
 				//첨부파일의 번호를 설정한다 
@@ -184,7 +276,7 @@
 		});
 	})
 	
-	  // 모달 종료(hide) 버튼
+	  // 모달 삭제(hide) 버튼
 	  document.querySelector("#btnDelete").addEventListener("click", e => {
 		  if (confirm("정말로 삭제하시겠습니까?")) {
 				myFetch("delete", "viewForm", json => {
@@ -200,46 +292,41 @@
 	  })
 	  
 	  document.querySelector("#btnUpdate").addEventListener("click", e => {
-	    const a = e.relatedTarget;
-	    const tbno = a.getAttribute('data-bs-tbno');
-	    const tmid = a.getAttribute('data-bs-tmid');
-	    console.log("모달 대화 상자 출력... tbno ", tbno);
-	
-	    // Accessing the span elements
-	    const span_tbtitle = document.querySelector("#span_tbtitle");
-	    const span_tbcontent = document.querySelector("#span_tbcontent");
-	
-	    // Creating input elements for editable fields
-	    const input_tbtitle = document.createElement('input');
-	    input_tbtitle.type = 'text';
-	    input_tbtitle.value = span_tbtitle.innerText;
-	
-	    const input_tbcontent = document.createElement('textarea');
-	    input_tbcontent.value = span_tbcontent.innerText;
-	
-	    // Replace spans with input elements
-	    span_tbtitle.replaceWith(input_tbtitle);
-	    span_tbcontent.replaceWith(input_tbcontent);
-	
-	    const viewForm = document.querySelector("#viewForm");
-	    console.log("viewForm", viewForm);
-	    console.log("tbno", viewForm.querySelector("#span_tbno"));
-	    console.log("tmid", viewForm.querySelector("#span_tmid"));
-	    viewForm.querySelector("#span_tbno").value = tbno;
-	    viewForm.querySelector("#span_tmid").value = tmid;
-	
-	    myFetch("jsonBoardInfo", "viewForm", json => {
-	        if (json.status == 0) {
-	            // 성공
-	            const jsonBoard = json.jsonBoard;
-	            // Set input values from JSON data
-	            input_tbtitle.value = jsonBoard.tbtitle;
-	            input_tbcontent.value = jsonBoard.tbcontent;
-	        } else {
-	            alert(json.statusMessage);
-	        }
-	    });
-	});
+		  document.querySelector("#update").style.display = "";
+		  document.querySelector("#updateButton").style.display = "";
+		  document.querySelector("#view").style.display = "none";
+		  document.querySelector("#viewButton").style.display = "none";
+		  
+		  if (confirm("정말로 수정하시겠습니까?")) {
+			  myFetch("update", "viewForm", json => {
+		    		if(json.status == 0) {
+		    			//성공
+		    			alert("게시물 수정을 성공 하였습니다");
+		    			location = "view?tbno=" + tbno.value;
+		    		} else {
+		    			alert(json.statusMessage);
+		    		}
+		    	});
+			} 
+
+	  })
+	  
+	  document.querySelector("#btnUpdateForm").addEventListener("click", e => {
+		  document.querySelector("#update").style.display = "";
+		  document.querySelector("#updateButton").style.display = "";
+		  document.querySelector("#view").style.display = "none";
+		  document.querySelector("#viewButton").style.display = "none";
+		  
+		  
+
+	  })
+	  
+	  document.querySelector("#btnCancle").addEventListener("click", e => {
+		  document.querySelector("#update").style.display = "none";
+		  document.querySelector("#updateButton").style.display = "none";
+		  document.querySelector("#view").style.display = "";
+		  document.querySelector("#viewButton").style.display = "";
+	  })
 	
 	const onBoardFileDownload = boardFile => {
 		const board_file_no = boardFile.getAttribute("data-board-file-no");
