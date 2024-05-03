@@ -78,7 +78,7 @@ public class MboardController1{
 		log.info("json 상세보기 -> {}", board);
 		//1. 처리
 		MboardVO1 resultVO = boardService.view(board, authentication);
-
+		System.out.println(resultVO);
 		Map<String, Object> map = new HashMap<>();
 		if (resultVO != null) { //성공
 			map.put("status", 0);
@@ -118,9 +118,9 @@ public class MboardController1{
 	
     @RequestMapping("/update")
     @ResponseBody
-	public Map<String, Object> update(@RequestBody MboardVO1 board) throws ServletException, IOException {
+	public Map<String, Object> update(MboardVO1 board) throws ServletException, IOException {
 		log.info("수정");
-		
+		log.info("board=> {}", board);
 		int updated = boardService.update(board);
 		
 		Map<String, Object> map = new HashMap<String, Object>();

@@ -39,7 +39,7 @@
         <textarea id="bcontent" name="tbcontent" required="required" placeholder="게시물 내용을 입력해주세요">
         </textarea>
         <div id="div_file">
-			<input  type='file' name='file' />
+			<input id="boardFileVO" type='file' name='file' />
 		</div>
         <br/>
 	    <div>

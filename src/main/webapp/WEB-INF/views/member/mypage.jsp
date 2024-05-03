@@ -36,7 +36,7 @@
 	
 	
 	<script>
-	menuActive("member_link");
+	menuActive("mypage_link");
 
 	function jsDelete() {
 		if (confirm("정말로 탈퇴하시겠습니까?")) {

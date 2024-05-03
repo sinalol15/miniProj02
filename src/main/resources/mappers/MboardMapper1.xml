@@ -55,7 +55,18 @@
 		update TB_BOARD set tbtitle = #{tbtitle}, tbcontent = #{tbcontent} where tbno = #{tbno}
 	</update>
 	
-	<insert id="insert">
-		insert into TB_BOARD (tbtitle, tbcontent, tmid) values (#{tbtitle}, #{tbcontent}, #{tmid})
+	<insert id="insert" >
+		<selectKey order="AFTER" keyProperty="tbno" resultType="int">
+			select LAST_INSERT_ID()
+		</selectKey>
+		insert into tb_board (
+			tbtitle,
+			tbcontent,
+			tmid
+		) values (
+			#{tbtitle},
+			#{tbcontent},
+			#{tmid}
+		) 
 	</insert>
 </mapper>

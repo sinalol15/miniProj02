@@ -111,24 +111,30 @@
 			      <label>첨부파일 : </label><span id="boardFile" data-board-file-no="" onclick="onBoardFileDownload(this)"></span><br/>
 		      </div>
 	      </div>
-	      <div id="update" style="display:none">
-	      	  <div class="modal-header">
-		        <h5 class="modal-title" id="staticBackdropLabel">게시물 수정 양식</h5>
-		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      
+	      <form id="rForm" action="update" method="post" enctype="multipart/form-data">	
+	      	  <input type="hidden" id="tbno3" name="tbno">
+    		  <input type="hidden" id="tmid3" name="tmid">
+		      <div id="update" style="display:none">
+		      	  <div class="modal-header">
+			        <h5 class="modal-title" id="staticBackdropLabel">게시물 수정 양식</h5>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body">
+				      <label>게시물 번호:</label><span id="tbno2"></span><br/>
+				      <label>제목 : </label><input type="text" id="tbtitle2" name="tbtitle"><br/>
+				      <label>내용 : </label><textarea id="tbcontent2" name="tbcontent"></textarea><br/>
+				      <label>조회수 :</label><span id="tbviewcount2"></span><br/>
+				      <label>작성자 : </label><span id="tmid2"></span><br/>
+				      <label>작성일 : </label><span id="tbdate2"></span><br/>
+				      <label>첨부파일 : </label><span id="boardFile2" data-board-file-no="" onclick="onBoardFileDownload(this)"></span><br/>
+			      </div>
+			      <div id="div_file">
+					  <input  type='file' name='file' />
+				  </div>
 		      </div>
-		      <div class="modal-body">
-			      <label>게시물 번호:</label><span id="tbno2"></span><br/>
-			      <label>제목 : </label><input type="text" id="tbtitle2" value="${board.tbtitle}"><br/>
-			      <label>내용 : </label><input type="text" id="tbcontent2" ><br/>
-			      <label>조회수 :</label><span id="tbviewcount2"></span><br/>
-			      <label>작성자 : </label><span id="tmid2"></span><br/>
-			      <label>작성일 : </label><span id="tbdate2"></span><br/>
-			      <label>첨부파일 : </label><span id="boardFile2" data-board-file-no="" onclick="onBoardFileDownload(this)"></span><br/>
-		      </div>
-		      <div id="div_file">
-				  <input  type='file' name='file' />
-			  </div>
-	      </div>
+	      </form>
+	      
 	      <div id="viewButton" style="display:">
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -187,8 +193,8 @@
 	const span_tbdate = document.querySelector(".modal-body #tbdate");
 	
 	const span_tbno2 = document.querySelector(".modal-body #tbno2");
-	const span_tbtitle2 = document.querySelector(".modal-body #tbtitle2");
-	const span_tbcontent2 = document.querySelector(".modal-body #tbcontent2");
+	const input_tbtitle2 = document.querySelector(".modal-body #tbtitle2");
+	const ckeditor_tbcontent2 = document.querySelector(".modal-body #tbcontent2");
 	const span_tbviewcount2 = document.querySelector(".modal-body #tbviewcount2");
 	const span_tmid2 = document.querySelector(".modal-body #tmid2");
 	const span_tbdate2 = document.querySelector(".modal-body #tbdate2");
@@ -219,6 +225,8 @@
 		const a = event.relatedTarget;
 		const tbno = a.getAttribute('data-bs-tbno'); //a.dataset["bs-bno"] //, a.dataset.bs-bno 사용안됨
 		const tmid = a.getAttribute('data-bs-tmid');
+		const tbtitle2 = a.getAttribute('data-bs-tbtitle2');
+		const tbcontent2 = a.getAttribute('data-bs-tbcontent2');
 		const mid = "${principal.mid}";
 		console.log("모달 대화 상자 출력... tbno ", tbno);
 		
@@ -231,18 +239,22 @@
 		boardFile.innerText = "";
 		
 		span_tbno2.innerText = "";
-		span_tbtitle2.innerText = "";
-		span_tbtitle2.innerText = "";
-		span_tbcontent2.innerText = "";
+		input_tbtitle2.value = "";
+		ckeditor_tbcontent2.innerHTML = "";
+		span_tbviewcount2.innerText = "";
 		span_tmid2.innerText = "";
 		span_tbdate2.innerText = "";
+		boardFile2.innerText = "";
 		
 		const viewForm = document.querySelector("#viewForm");
+		const rForm = document.querySelector("#rForm");
 		console.log("viewForm", viewForm);
 		console.log("tbno", viewForm.querySelector("#tbno"));
 		console.log("tmid", viewForm.querySelector("#tmid"));
 		viewForm.querySelector("#tbno").value = tbno;
 		viewForm.querySelector("#tmid").value = tmid;
+		rForm.querySelector("#tbno3").value = tbno;
+		rForm.querySelector("#tmid3").value = tmid;
 		myFetch("jsonBoardInfo", "viewForm", json => {
 			if(json.status == 0) {
 				
@@ -260,8 +272,9 @@
 				span_tbdate.innerText = jsonBoard.tbdate;
 				
 				span_tbno2.innerText = jsonBoard.tbno;
-				span_tbtitle2.innerText = jsonBoard.tbtitle;
-				span_tbcontent2.innerText = jsonBoard.tbcontent;
+				input_tbtitle2.value = jsonBoard.tbtitle;
+				window.bcontent.setData(jsonBoard.tbcontent);
+				//CKEDITOR.instances.tbcontent2.setData(ckeditor_tbcontent2);
 				span_tbviewcount2.innerText = jsonBoard.tbviewcount;
 				span_tmid2.innerText = jsonBoard.tmid;
 				span_tbdate2.innerText = jsonBoard.tbdate;
@@ -270,6 +283,11 @@
 				boardFile.innerText = jsonBoard.boardFileVO.original_filename;
 				//첨부파일의 번호를 설정한다 
 				boardFile.setAttribute("data-board-file-no", jsonBoard.boardFileVO.board_file_id);
+				
+				//첨부파일명을 출력한다
+				boardFile2.innerText = jsonBoard.boardFileVO.original_filename;
+				//첨부파일의 번호를 설정한다 
+				boardFile2.setAttribute("data-board-file-no", jsonBoard.boardFileVO.board_file_id);
 			} else {
 				alert(json.statusMessage);
 			}
@@ -297,12 +315,14 @@
 		  document.querySelector("#view").style.display = "none";
 		  document.querySelector("#viewButton").style.display = "none";
 		  
-		  if (confirm("정말로 수정하시겠습니까?")) {
-			  myFetch("update", "viewForm", json => {
+		  document.querySelector("#tbcontent2").value = window.bcontent.getData(); 
+		  
+		  if (confirm("정말로 수정하시겠습니까?")) {			  
+			  myFileFetch("update", "rForm", json => {
 		    		if(json.status == 0) {
 		    			//성공
 		    			alert("게시물 수정을 성공 하였습니다");
-		    			location = "view?tbno=" + tbno.value;
+		    			location = "list";
 		    		} else {
 		    			alert(json.statusMessage);
 		    		}
@@ -316,9 +336,6 @@
 		  document.querySelector("#updateButton").style.display = "";
 		  document.querySelector("#view").style.display = "none";
 		  document.querySelector("#viewButton").style.display = "none";
-		  
-		  
-
 	  })
 	  
 	  document.querySelector("#btnCancle").addEventListener("click", e => {

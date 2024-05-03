@@ -105,7 +105,6 @@ public class MboardService1 {
 		if (boardFileVO != null) {
 			//첨부파일에 게시물의 아이디를 설정한다
 			boardFileVO.setTbno(board.getTbno());
-
 			//저장에 파일 정보를 DB에 저장한다
 			result = boardFileMapper.insert(boardFileVO);
 		}
