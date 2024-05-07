@@ -45,6 +45,7 @@
 	            <th>이름</th>
 	            <th>나이</th>
 	            <th>이메일</th>
+	            <th>권한</th>
 	            <th>잠금 여부</th>
 	        </tr>
 	        
@@ -55,6 +56,7 @@
 	            <td>${member.mname}</td>
 	            <td>${member.mage}</td>
 	            <td>${member.memail}</td>
+	            <td>${member.member_roles}</td>
 	            <td>${member.member_account_locked}</td>
 	        </tr>
 	        </c:forEach>

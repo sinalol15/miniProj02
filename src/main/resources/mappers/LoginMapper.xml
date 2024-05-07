@@ -16,10 +16,24 @@
 		where mid = #{mid}  
 	</update>
 
-	<update id="loginCountInc" parameterType="String">
+<!-- 	<update id="loginCountInc" parameterType="String">
 		update tb_member set 
 			member_login_count = member_login_count + 1
 			, member_account_locked = case when member_login_count >= 2 then 'Y' ELSE 'N' end 
+		where mid = #{mid} 
+	</update>  -->
+	
+	<update id="loginCountInc" parameterType="String">
+		update tb_member set 
+			member_login_count = member_login_count + 1
+			<choose>
+				<when test="member_login_count > 3">
+					, member_account_locked = 'Y'
+				</when>
+				<otherwise>
+					, member_account_locked = 'N'
+				</otherwise>
+			</choose>
 		where mid = #{mid} 
 	</update> 
 

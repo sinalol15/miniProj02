@@ -20,7 +20,7 @@
 	
 	<select id="getList" resultType="org.kosa.hello.entity.MmemberVO1">
 	    select 
-			mid, mname, mage, memail, member_account_locked 
+			mid, mname, mage, memail, member_roles, member_account_locked 
 		from tb_member
 		<include refid="search"/>
 		order by mid desc limit #{skip}, #{size}

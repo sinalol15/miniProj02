@@ -72,7 +72,7 @@ public class MboardController1{
 		return "board/view";
 	}
     
-	@RequestMapping("jsonBoardInfo")
+	@RequestMapping("/jsonBoardInfo")
 	@ResponseBody
 	public Map<String, Object> jsonBoardInfo(@RequestBody MboardVO1 board, Authentication authentication) throws ServletException, IOException, SQLException {
 		log.info("json 상세보기 -> {}", board);
